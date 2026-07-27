@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriAI</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="NutriAI Logo">
+            <span>NutriAI</span>
+        </a>
+    
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#">Meal Planner</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Login</a></li>
+
+
+        </ul>
+    
+    
+    </nav>
+
+    <section class="hero">
+        <h1>Welcome to NutriAI</h1>
+
+        <p>Your personalized AI-powered nutrition and meal recommendation system.</p>
+
+        <a href="{% url 'index' %}" class="btn">Get Started</a>
+        <a href="#" class="btn">Learn More</a>
+    </section>
+
+</body>
+</html>
