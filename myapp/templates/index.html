@@ -1,42 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NutriAI</title>
+{% extends "base.html" %}
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <nav class="navbar">
+{% block title %}NutriAI | Your AI Nutrition Assistant{% endblock %}
 
-        <a href="{% url 'home' %}" class="logo">
-            <img src="{% static 'images/logo.png' %}" alt="NutriAI Logo">
-            <span>NutriAI</span>
-        </a>
-    
-        <ul class="nav-links">
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="#">Meal Planner</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Login</a></li>
+{% block content %}
+
+<!-- Hero Section -->
+<section class="landing-hero">
+
+    <div class="landing-text">
+
+        <h1>
+            Eat Better.<br>
+            Live Healthier.<br>
+            Powered by <span>AI.</span>
+        </h1>
+
+        <p>
+            NutriAI creates personalized meal recommendations
+            based on your body, goals, and lifestyle.
+            Make smarter food choices with artificial intelligence.
+        </p>
+
+        <div class="landing-buttons">
+            <a href="#" class="btn">Get Started</a>
+            <a href="{% url 'about' %}" class="btn-outline">Explore More</a>
+        </div>
+
+    </div>
 
 
-        </ul>
-    
-    
-    </nav>
+    <div class="landing-card">
 
-    <section class="hero">
-        <h1>Welcome to NutriAI</h1>
+        <div class="ai-card">
 
-        <p>Your personalized AI-powered nutrition and meal recommendation system.</p>
+            <h3>Today's AI Recommendation</h3>
 
-        <a href="{% url 'index' %}" class="btn">Get Started</a>
-        <a href="#" class="btn">Learn More</a>
-    </section>
+            <div class="food-item">
+                🍚 Dal Bhat
+                <span>650 kcal</span>
+            </div>
 
-</body>
-</html>
+            <div class="food-item">
+                🥗 Green Salad
+                <span>120 kcal</span>
+            </div>
+
+            <div class="food-item">
+                🥛 Yogurt
+                <span>90 kcal</span>
+            </div>
+
+
+            <hr>
+
+            <p>
+                🔥 Daily Goal: 1800 kcal
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- Features -->
+
+<section class="landing-features">
+
+    <h2>
+        Why Choose NutriAI?
+    </h2>
+
+    <p>
+        Smart nutrition solutions designed around you.
+    </p>
+
+
+    <div class="landing-grid">
+
+        <div class="landing-box">
+
+            <div class="landing-icon">
+                🥗
+            </div>
+
+            <h3>
+                Personalized Meals
+            </h3>
+
+            <p>
+                Meal plans based on your health profile,
+                calorie needs, and preferences.
+            </p>
+
+        </div>
+
+
+        <div class="landing-box">
+
+            <div class="landing-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Recommendations
+            </h3>
+
+            <p>
+                Intelligent suggestions that adapt
+                to your nutrition journey.
+            </p>
+
+        </div>
+
+
+        <div class="landing-box">
+
+            <div class="landing-icon">
+                📊
+            </div>
+
+            <h3>
+                Track Progress
+            </h3>
+
+            <p>
+                Monitor calories and build healthier habits.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- CTA -->
+
+<section class="landing-cta">
+
+    <h2>
+        Start your personalized nutrition journey today
+    </h2>
+
+    <p>
+        Let NutriAI guide you towards healthier decisions.
+    </p>
+
+    <a href="#" class="btn">
+        Create Free Account
+    </a>
+
+</section>
+
+
+{% endblock %}

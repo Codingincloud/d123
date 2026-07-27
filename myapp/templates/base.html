@@ -1,15 +1,37 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<p>
-    this is a trial
+    <title>{% block title %}NutriAI{% endblock %}</title>
 
-</p>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 <body>
-    <a href="{% url 'index' %}" class="btn btn-primary">Go to Index</a>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <a href="{% url 'home' %}" class="logo">
+            <link rel="stylesheet" href="{% static 'css/style.css' %}">
+            <span>NutriAI</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#">Meal Planner</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+            <li><a href="#">Login</a></li>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content -->
+    {% block content %}
+    {% endblock %}
+    
+
 </body>
 </html>

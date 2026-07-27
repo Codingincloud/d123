@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Contact | NutriAI{% endblock %}
+
+{% block content %}
+
+<section class="contact">
+
+    <h1>Contact Us</h1>
+
+    <p class="contact-intro">
+        We'd love to hear from you! Whether you have questions, feedback,
+        or suggestions, feel free to get in touch.
+    </p>
+
+    <div class="contact-container">
+
+        <!-- Contact Information -->
+        <div class="contact-info">
+
+            <h2>Get in Touch</h2>
+
+            <p><strong>Email:</strong> nutriai@example.com</p>
+            <p><strong>Phone:</strong> +977 98XXXXXXXX</p>
+            <p><strong>Location:</strong> Bhaktapur, Nepal</p>
+
+            <h3>Office Hours</h3>
+            <p>Sunday – Friday</p>
+            <p>9:00 AM – 5:00 PM</p>
+
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form">
+
+            <form action="#" method="post">
+                {% csrf_token %}
+
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="Subject" required>
+
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="6" placeholder="Write your message..." required></textarea>
+
+                <button type="submit" class="btn">Send Message</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

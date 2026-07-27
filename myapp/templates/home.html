@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}NutriAI | Personalized Nutrition{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="home-hero">
+
+    <div class="hero-text">
+
+        <h1>
+            Eat Smarter.<br>
+            Live Healthier with <span>AI</span>.
+        </h1>
+
+        <p>
+            NutriAI creates personalized meal recommendations based on
+            your health goals, lifestyle, and nutritional needs.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="#" class="btn">Get Started</a>
+            <a href="{% url 'about' %}" class="btn-outline">Learn More</a>
+        </div>
+
+    </div>
+
+
+    <div class="hero-card">
+
+        <div class="nutrition-card">
+
+            <h3>Today's Nutrition</h3>
+
+            <div class="nutrition-item">
+                <span>Calories</span>
+                <strong>1850 kcal</strong>
+            </div>
+
+            <div class="nutrition-item">
+                <span>Protein</span>
+                <strong>75g</strong>
+            </div>
+
+            <div class="nutrition-item">
+                <span>Water</span>
+                <strong>2.5L</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Features Section -->
+
+<section class="home-features">
+
+    <h2>Everything you need for healthier eating</h2>
+
+    <p>
+        Personalized nutrition powered by artificial intelligence.
+    </p>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature-box">
+
+            <div class="icon">🥗</div>
+
+            <h3>Personalized Meals</h3>
+
+            <p>
+                Get meal plans designed around your body,
+                goals, and preferences.
+            </p>
+
+        </div>
+
+
+        <div class="feature-box">
+
+            <div class="icon">🤖</div>
+
+            <h3>AI Recommendations</h3>
+
+            <p>
+                Smart suggestions that improve as you track
+                your progress.
+            </p>
+
+        </div>
+
+
+        <div class="feature-box">
+
+            <div class="icon">🔥</div>
+
+            <h3>Calorie Tracking</h3>
+
+            <p>
+                Monitor your daily nutrition and maintain
+                healthy habits.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- CTA -->
+
+<section class="home-cta">
+
+    <h2>
+        Start your personalized nutrition journey today.
+    </h2>
+
+    <a href="#" class="btn">
+        Create Your Plan
+    </a>
+
+</section>
+
+
+{% endblock %}
