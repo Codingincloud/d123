@@ -24,3 +24,5 @@ staticfiles/
 
 # Media uploads
 media/
+
+.env
