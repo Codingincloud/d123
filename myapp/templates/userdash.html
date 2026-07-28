@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | NutriAI{% endblock %}
+
+
+{% block content %}
+
+<section class="dashboard">
+
+
+    <div class="dashboard-header">
+
+        <h1>
+            Welcome, {{ user.username }} 👋
+        </h1>
+
+        <p>
+            Your personalized nutrition dashboard.
+        </p>
+
+    </div>
+
+
+
+    <!-- Nutrition Summary -->
+
+    <div class="dashboard-cards">
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                🔥
+            </div>
+
+            <h3>
+                Daily Calories
+            </h3>
+
+            <h2>
+                1800 kcal
+            </h2>
+
+            <p>
+                Recommended daily intake
+            </p>
+
+        </div>
+
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                💪
+            </div>
+
+            <h3>
+                Protein Goal
+            </h3>
+
+            <h2>
+                60g
+            </h2>
+
+            <p>
+                Daily protein target
+            </p>
+
+        </div>
+
+
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                ⚖️
+            </div>
+
+            <h3>
+                Current Goal
+            </h3>
+
+            <h2>
+                Maintain
+            </h2>
+
+            <p>
+                Health goal
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <!-- Quick Actions -->
+
+
+    <section class="dashboard-actions">
+
+
+        <h2>
+            Quick Actions
+        </h2>
+
+
+        <div class="action-grid">
+
+
+            <div class="action-card">
+
+                🥗
+
+                <h3>
+                    Generate Meal Plan
+                </h3>
+
+                <p>
+                    Get AI-powered meal suggestions.
+                </p>
+
+            </div>
+
+
+
+            <div class="action-card">
+
+                📊
+
+                <h3>
+                    Track Calories
+                </h3>
+
+                <p>
+                    Monitor your daily food intake.
+                </p>
+
+            </div>
+
+
+
+
+            <div class="action-card">
+
+                👤
+
+                <h3>
+                    Update Profile
+                </h3>
+
+                <p>
+                    Manage your nutrition preferences.
+                </p>
+
+            </div>
+
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+    <!-- Today's Meal -->
+
+    <section class="today-meal">
+
+
+        <h2>
+            Today's Suggested Meals
+        </h2>
+
+
+        <div class="meal-grid">
+
+
+            <div class="meal-card">
+
+                🍚
+
+                <h3>
+                    Dal Bhat
+                </h3>
+
+                <p>
+                    650 kcal | Protein 25g
+                </p>
+
+            </div>
+
+
+
+            <div class="meal-card">
+
+                🥗
+
+                <h3>
+                    Green Salad
+                </h3>
+
+                <p>
+                    120 kcal | Fiber rich
+                </p>
+
+            </div>
+
+
+
+            <div class="meal-card">
+
+                🥛
+
+                <h3>
+                    Yogurt
+                </h3>
+
+                <p>
+                    90 kcal | Calcium source
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</section>
+
+
+{% endblock %}

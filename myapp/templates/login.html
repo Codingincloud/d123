@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Login | NutriAI{% endblock %}
+
+{% block content %}
+
+<section class="login-section">
+
+    <div class="login-container">
+
+        <div class="login-icon">
+            🔐
+        </div>
+
+        <h2>Welcome Back</h2>
+
+        <p class="login-subtitle">
+            Login to continue your personalized nutrition journey.
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input 
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input 
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required>
+
+            </div>
+
+
+            <button type="submit" class="login-btn">
+                Login
+            </button>
+
+
+        </form>
+
+
+        <p class="register-link">
+            Don't have an account?
+            <a href="{% url 'register' %}">
+                Create one
+            </a>
+        </p>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}

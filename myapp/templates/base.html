@@ -13,26 +13,205 @@
     <!-- Navbar -->
     <nav class="navbar">
 
-        <a href="{% url 'home' %}" class="logo">
-            <link rel="stylesheet" href="{% static 'css/style.css' %}">
-            <span>NutriAI</span>
+        <a href="{% url 'index' %}" class="logo">
+            NutriAI
         </a>
-
-        <ul class="nav-links">
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="#">Meal Planner</a></li>
-            <li><a href="{% url 'about' %}">About</a></li>
-            <li><a href="{% url 'contact' %}">Contact</a></li>
-            <li><a href="{% url 'register' %}">Sign Up</a></li>
-            <!-- <li><a href="#">Login</a></li> -->
+    
+    
+        <!-- Hamburger -->
+        <button class="hamburger" onclick="toggleMenu()">
+            ☰
+        </button>
+    
+    
+        <ul class="nav-links" id="navLinks">
+    
+            <li>
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+            </li>
+    
+    
+            <li>
+                <a href="#">
+                    Meal Planner
+                </a>
+            </li>
+    
+    
+            <li>
+                <a href="{% url 'about' %}">
+                    About
+                </a>
+            </li>
+    
+    
+            <li>
+                <a href="{% url 'contact' %}">
+                    Contact
+                </a>
+            </li>
+    
+    
+            {% if user.is_authenticated %}
+    
+            <li class="dropdown">
+    
+                <a href="#" class="drop-btn">
+                    👤 {{ user.username }}
+                </a>
+    
+    
+                <div class="dropdown-menu">
+    
+                    <a href="{% url 'userdash' %}">
+                        Dashboard
+                    </a>
+    
+                    <a href="#">
+                        My Profile
+                    </a>
+    
+                    <a href="#">
+                        Nutrition Goals
+                    </a>
+    
+                    <a href="#">
+                        Meal History
+                    </a>
+    
+                    <a href="{% url 'logout' %}">
+                        Logout
+                    </a>
+    
+                </div>
+    
+            </li>
+    
+    
+            {% else %}
+    
+    
+            <li class="dropdown">
+    
+                <a href="#" class="drop-btn">
+                    Sign In
+                </a>
+    
+    
+                <div class="dropdown-menu">
+    
+                    <a href="{% url 'login' %}">
+                        Sign In
+                    </a>
+    
+                    <a href="{% url 'register' %}">
+                        Create Account
+                    </a>
+    
+                </div>
+    
+            </li>
+    
+    
+            {% endif %}
+    
+    
         </ul>
-
+    
     </nav>
 
     <!-- Page Content -->
+
     {% block content %}
     {% endblock %}
-    
 
+ 
+
+    <footer class="footer">
+
+        <div class="footer-container">
+    
+            <div class="footer-section">
+                <h2>NutriAI</h2>
+                <p>
+                    Your AI-powered nutrition assistant designed to help you
+                    make healthier food choices with personalized meal recommendations.
+                </p>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+    
+                <ul>
+                    <li><a href="{% url 'index' %}">Landing</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Contact</h3>
+    
+                <p>📍 Bhaktapur, Nepal</p>
+                <p>📧 support@nutriai.com</p>
+                <p>📞 +977 98XXXXXXXX</p>
+            </div>
+    
+        </div>
+    
+        <hr>
+    
+        <div class="footer-bottom">
+            <p>&copy; 2026 NutriAI. All Rights Reserved.</p>
+        </div>
+    
+    </footer>
+    <script>
+
+        function toggleMenu(){
+        
+            const menu = document.getElementById("navLinks");
+        
+            console.log("clicked");
+        
+            menu.classList.toggle("active");
+        
+        }
+        
+        </script>
+        <script>
+
+function toggleProfile(){
+
+    let menu = document.getElementById("profileMenu");
+
+    if(menu){
+        menu.classList.toggle("active");
+    }
+
+}
+
+
+document.addEventListener("click", function(e){
+
+    let profile = document.querySelector(".profile-dropdown");
+    let menu = document.getElementById("profileMenu");
+
+
+    if(profile && !profile.contains(e.target)){
+
+        if(menu){
+            menu.classList.remove("active");
+        }
+
+    }
+
+});
+
+</script>
 </body>
 </html>
+
