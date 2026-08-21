@@ -8,6 +8,7 @@ class UserProfile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=20, blank=True)
     height = models.FloatField(null=True, blank=True)
+    weight = models.FloatField(null=True, blank=True)
     activity_level = models.CharField(max_length=30, blank=True)
     goal = models.CharField(max_length=30, blank=True)
     daily_calorie_target = models.FloatField(null=True, blank=True)

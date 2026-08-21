@@ -114,7 +114,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from .forms import UserProfileForm
+from .models import UserProfile
 
 
 # ==========================
@@ -205,57 +206,39 @@ def register(request):
 # LOGIN
 # ==========================
 
+# ==========================
+# LOGIN
+# ==========================
+
 def user_login(request):
 
     if request.method == "POST":
-
-
         username = request.POST.get("username")
-
         password = request.POST.get("password")
 
-
-
         user = authenticate(
-
             request,
-
             username=username,
-
             password=password
-
         )
 
-
-
         if user is not None:
+            login(request, user)
 
+            # Direct admin/staff users straight to the dashboard or admin panel
+            if user.is_staff or user.is_superuser:
+                return redirect("userdash")  # or redirect("/admin/")
 
-            login(
-                request,
-                user
-            )
-
-
-            return redirect("userdash")
-
-
+            # Regular users check for a profile
+            try:
+                UserProfile.objects.get(user=user)
+                return redirect("userdash")
+            except UserProfile.DoesNotExist:
+                return redirect("profilesetup")
 
         else:
-
-
-            messages.error(
-
-                request,
-
-                "Invalid username or password"
-
-            )
-
-
+            messages.error(request, "Invalid username or password")
             return redirect("login")
-
-
 
     return render(request, "login.html")
 
@@ -295,4 +278,42 @@ def userdash(request):
     return render(
         request,
         "userdash.html"
+    )
+    
+
+# ==========================
+# USER PROFILE
+# ==========================
+
+
+
+
+@login_required
+def profilesetup(request):
+
+    # Block admins/staff from accessing profile setup
+    if request.user.is_staff or request.user.is_superuser:
+        return redirect("userdash")
+
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile = None
+
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, instance=profile)
+
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            return redirect("userdash")
+
+    else:
+        form = UserProfileForm(instance=profile)
+
+    return render(
+        request,
+        "profilesetup.html",
+        {"form": form}
     )

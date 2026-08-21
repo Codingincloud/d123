@@ -36,7 +36,8 @@ urlpatterns = [
 
     path("logout/", views.user_logout, name="logout"),
 
-
     path("dashboard/", views.userdash, name="userdash"),
+    
+    path("profile/setup/",views.profilesetup,name="profilesetup"),
 
 ]
