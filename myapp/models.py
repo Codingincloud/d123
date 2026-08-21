@@ -3,10 +3,16 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
 class UserProfile(models.Model):
+    GENDER_CHOICES = [
+        ('female', 'Female'),
+        ('male', 'Male'),
+        ('other', 'Other'),
+        ('prefer_not_to_say', 'Prefer not to say'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     date_of_birth = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=20, blank=True)
+    gender = models.CharField(max_length=20, choices=GENDER_CHOICES,blank=True)
     height = models.FloatField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
     activity_level = models.CharField(max_length=30, blank=True)
