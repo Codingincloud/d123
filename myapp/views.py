@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from .forms import UserEditForm, ProfileEditForm
 
 from .models import (
@@ -192,28 +193,66 @@ def userdash(request):
     # LOG FOOD
     # --------------------------
 
+
+    # if request.method == "POST" and "meal_submit" in request.POST:
+
+    #   food_name = request.POST.get("food_name", "").strip()
+
+    #   if food_name:
+    #     try:
+    #         food = Food.objects.get(name__iexact=food_name)
+
+    #         MealLog.objects.create(
+    #             user=request.user,
+    #             food=food,
+    #             meal_type="snack",
+    #             quantity=1,
+    #             consumed_at=timezone.now(),
+    #         )
+
+    #         messages.success(
+    #             request,
+    #             f"{food.name} logged successfully!"
+    #         )
+
+    #         return redirect("userdash")
+
+    #     except Food.DoesNotExist:
+    #         messages.error(
+    #             request,
+    #             f"'{food_name}' was not found in the food database."
+    #         )
+
+    
+     # --------------------------
+    
+    # --------------------------
+
+    # LOG FOOD
+    # --------------------------
+
     if request.method == "POST" and "meal_submit" in request.POST:
 
-        meal_form = MealLogForm(request.POST)
+      food_name = request.POST.get("food_name", "").strip()
 
-        if meal_form.is_valid():
+      if food_name:
+          MealLog.objects.create(
+            user=request.user,
+            food_name=food_name,
+            food=None,
+            meal_type="snack",
+            quantity=1,
+            consumed_at=timezone.now(),
+          )
 
-            meal = meal_form.save(
-                commit=False
-            )
+          messages.success(
+            request,
+            f"{food_name} logged successfully!"
+          )
 
-            meal.user = request.user
+          return redirect("userdash")
 
-            meal.save()
-
-            messages.success(
-                request,
-                "Meal logged successfully!"
-            )
-
-            return redirect("userdash")
-
-
+# --------------------------
     # --------------------------
     # LOG WATER
     # --------------------------
