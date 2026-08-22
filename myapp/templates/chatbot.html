@@ -3,8 +3,45 @@
 {% block title %}AI Chatbot | NutriAI{% endblock %}
 
 {% block content %}
-<main>
-    <h1>NutriAI Chatbot</h1>
-    <p>Hello! How can I help with your nutrition today?</p>
+<main class="chatbot-page">
+    <section class="chatbot-panel" aria-labelledby="chatbot-heading">
+        <div class="chatbot-header">
+            <div>
+                <p class="chatbot-eyebrow">NutriAI Assistant</p>
+                <h1 id="chatbot-heading">How can I help?</h1>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="action" value="clear" class="chatbot-clear">Clear chat</button>
+            </form>
+        </div>
+
+        <div class="chatbot-messages" aria-live="polite">
+            {% if chat_history %}
+                {% for chat in chat_history %}
+                <article class="chat-message chat-message--{{ chat.role }}">
+                    <p>{{ chat.content|linebreaksbr }}</p>
+                </article>
+                {% endfor %}
+            {% else %}
+            <article class="chat-message chat-message--assistant">
+                <p>Hi! Ask me a nutrition question to get started.</p>
+            </article>
+            {% endif %}
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <p class="chatbot-error">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="chatbot-form">
+            {% csrf_token %}
+            <label class="sr-only" for="chatbot-message">Your message</label>
+            <textarea id="chatbot-message" name="message" rows="2" maxlength="2000" required placeholder="Ask about meals, nutrition, or healthy habits..."></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </section>
 </main>
 {% endblock %}

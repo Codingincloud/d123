@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
+from .services.chatbot import ChatbotConfigurationError, ChatbotError, get_chatbot_reply
+
 from .models import (
     UserProfile,
     FoodCategory,
@@ -45,6 +47,42 @@ def about(request):
 
 def contact(request):
     return render(request, "contact.html")
+
+
+@login_required
+def chatbot(request):
+    history = request.session.get("chatbot_history", [])
+
+    if request.method == "POST":
+        if request.POST.get("action") == "clear":
+            request.session["chatbot_history"] = []
+            return redirect("chatbot")
+
+        user_message = request.POST.get("message", "").strip()
+
+        if user_message:
+            if len(user_message) > 2000:
+                messages.error(request, "Please keep messages to 2,000 characters or fewer.")
+                return redirect("chatbot")
+
+            history.append({"role": "user", "content": user_message})
+
+            try:
+                assistant_reply = get_chatbot_reply(history, request.user)
+            except ChatbotConfigurationError:
+                messages.error(request, "The chatbot is not configured yet. Add GROQ_API_KEY to your .env file.")
+                return redirect("chatbot")
+            except ChatbotError:
+                messages.error(request, "The chatbot could not respond right now. Please try again.")
+                return redirect("chatbot")
+
+            history.append({"role": "assistant", "content": assistant_reply})
+            request.session["chatbot_history"] = history[-12:]
+            request.session.modified = True
+
+        return redirect("chatbot")
+
+    return render(request, "chatbot.html", {"chat_history": history})
 
 
 # ==========================
