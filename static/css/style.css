@@ -1539,3 +1539,28 @@ body {
         margin-top: 50px;
     }
 }
+
+.chatbot-button {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1000;
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border-radius: 50%;
+    background: #2e7d32;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.chatbot-button:hover,
+.chatbot-button:focus-visible {
+    background: #1b5e20;
+    color: #fff;
+    transform: scale(1.08);
+}

@@ -16,6 +16,7 @@
 
 
 from django.urls import path
+from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from . import views
 
@@ -43,6 +44,6 @@ urlpatterns = [
     path('log-meal/', views.log_meal, name='log_meal'),
     path('log-water/', views.log_water, name='log_water'),
     path('log-weight/', views.log_weight, name='log_weight'),
-    path('chatbot/', TemplateView.as_view(template_name='chatbot.html'), name='chatbot'),
+    path('chatbot/', login_required(TemplateView.as_view(template_name='chatbot.html')), name='chatbot'),
 
 ]   
