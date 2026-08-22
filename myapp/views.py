@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .forms import UserEditForm, ProfileEditForm
 
 from .models import (
     UserProfile,
@@ -571,3 +572,67 @@ def add_category(request):
         "add_category.html",
         {"form": form}
     )
+
+
+
+# ==========================
+# EDIT USER PROFILE
+# ==========================
+
+@login_required
+def edit_profile(request):
+
+    profile = request.user.userprofile
+
+    if request.method == "POST":
+
+        user_form = UserEditForm(
+            request.POST,
+            instance=request.user
+        )
+
+        profile_form = ProfileEditForm(
+            request.POST,
+            instance=profile
+        )
+
+        if user_form.is_valid() and profile_form.is_valid():
+
+            user_form.save()
+            profile_form.save()
+
+            return redirect("userdash")
+
+    else:
+
+        user_form = UserEditForm(
+            instance=request.user
+        )
+
+        profile_form = ProfileEditForm(
+            instance=profile
+        )
+
+    context = {
+        "user_form": user_form,
+        "profile_form": profile_form,
+    }
+
+    return render(
+        request,
+        "edit_profile.html",
+        context
+    )
+
+
+# ==========================
+# USER PROFILE view
+# ==========================
+
+@login_required
+def profile(request):
+    profile = request.user.userprofile
+
+    return render(request, "profile.html", {
+        "profile": profile,
+    })

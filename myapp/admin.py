@@ -17,6 +17,7 @@ class UserProfileAdmin(admin.ModelAdmin):
         'user',
         'gender',
         'height',
+        'weight',   
         'activity_level',
         'goal',
         'daily_calorie_target',

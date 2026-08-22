@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="profile-page">
+
+    <div class="profile-header">
+
+        <div class="profile-avatar">
+            👤
+        </div>
+
+        <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
+
+        <p>{{ request.user.email }}</p>
+
+    </div>
+
+
+    <div class="profile-container">
+
+        <!-- BASIC INFORMATION -->
+
+        <div class="profile-section">
+
+            <div class="profile-section-header">
+                <span>👤</span>
+                <h2>Personal Information</h2>
+            </div>
+
+            <div class="profile-grid">
+
+                <div class="profile-item">
+                    <span>Username</span>
+                    <strong>{{ request.user.username }}</strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>Email</span>
+                    <strong>{{ request.user.email }}</strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>First Name</span>
+                    <strong>{{ request.user.first_name|default:"Not provided" }}</strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>Last Name</span>
+                    <strong>{{ request.user.last_name|default:"Not provided" }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HEALTH INFORMATION -->
+
+        <div class="profile-section">
+
+            <div class="profile-section-header">
+                <span>🥗</span>
+                <h2>Health & Nutrition</h2>
+            </div>
+
+            <div class="profile-grid">
+
+                <div class="profile-item">
+                    <span>Gender</span>
+                    <strong>{{ profile.gender|default:"Not provided" }}</strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>Height</span>
+                    <strong>
+                        {% if profile.height %}
+                            {{ profile.height }}
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>Weight</span>
+                    <strong>
+                        {% if profile.weight %}
+                            {{ profile.weight }} kg
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>Activity Level</span>
+                    <strong>{{ profile.activity_level|default:"Not provided" }}</strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>Goal</span>
+                    <strong>{{ profile.goal|default:"Not provided" }}</strong>
+                </div>
+
+                <div class="profile-item calorie-item">
+                    <span>Daily Calorie Target</span>
+                    <strong>
+                        {% if profile.daily_calorie_target %}
+                            {{ profile.daily_calorie_target }} kcal
+                        {% else %}
+                            Not calculated
+                        {% endif %}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="profile-actions">
+
+            <a href="{% url 'edit_profile' %}" class="edit-profile-btn">
+                ✏️ Edit Profile
+            </a>
+
+            <a href="{% url 'userdash' %}" class="back-dashboard-btn">
+                ← Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

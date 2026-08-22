@@ -1,5 +1,6 @@
 from django import forms
 from django.utils import timezone
+from django.contrib.auth.models import User
 from .models import (
     UserProfile,
     FoodCategory,
@@ -9,7 +10,9 @@ from .models import (
     MealLog,
     WaterLog,
     WeightLog,
+    UserProfile,
 )
+
 
 
 # ==========================
@@ -189,3 +192,41 @@ class WeightLogForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if not self.instance.pk:
             self.fields["recorded_at"].initial = timezone.now().strftime("%Y-%m-%dT%H:%M")
+            
+            
+
+
+
+
+
+# ==========================
+# EDIT USER PROFILE
+# ==========================
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={
+                "placeholder": "First Name"
+            }),
+            "last_name": forms.TextInput(attrs={
+                "placeholder": "Last Name"
+            }),
+            "email": forms.EmailInput(attrs={
+                "placeholder": "Email"
+            }),
+        }
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = [
+            "gender",
+            "height",
+            "weight",
+            "activity_level",
+            "goal",
+        ]
