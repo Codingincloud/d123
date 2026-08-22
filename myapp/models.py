@@ -9,14 +9,29 @@ class UserProfile(models.Model):
         ('other', 'Other'),
         ('prefer_not_to_say', 'Prefer not to say'),
     ]
+
+    ACTIVITY_CHOICES = [
+        ('sedentary', 'Sedentary'),
+        ('light', 'Lightly Active'),
+        ('moderate', 'Moderately Active'),
+        ('very', 'Very Active'),
+    ]
+
+    GOAL_CHOICES = [
+        ('lose', 'Lose Weight'),
+        ('maintain', 'Maintain Weight'),
+        ('gain', 'Gain Weight'),
+    ]
+
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES,blank=True)
     height = models.FloatField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
-    activity_level = models.CharField(max_length=30, blank=True)
-    goal = models.CharField(max_length=30, blank=True)
+    activity_level = models.CharField(max_length=30, choices=ACTIVITY_CHOICES, blank=True)
+    goal = models.CharField(max_length=30, choices=GOAL_CHOICES, blank=True)
     daily_calorie_target = models.FloatField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
