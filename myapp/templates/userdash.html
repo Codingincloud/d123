@@ -7,6 +7,9 @@
 
 <section class="dashboard">
 
+    <!-- ==========================
+         DASHBOARD HEADER
+    ========================== -->
 
     <div class="dashboard-header">
 
@@ -21,11 +24,11 @@
     </div>
 
 
-
-    <!-- Nutrition Summary -->
+    <!-- ==========================
+         NUTRITION SUMMARY
+    ========================== -->
 
     <div class="dashboard-cards">
-
 
         <div class="dashboard-card">
 
@@ -46,7 +49,6 @@
             </p>
 
         </div>
-
 
 
         <div class="dashboard-card">
@@ -70,8 +72,6 @@
         </div>
 
 
-
-
         <div class="dashboard-card">
 
             <div class="card-icon">
@@ -92,29 +92,26 @@
 
         </div>
 
-
     </div>
 
 
-
-
-    <!-- Quick Actions -->
-
+    <!-- ==========================
+         QUICK ACTIONS
+    ========================== -->
 
     <section class="dashboard-actions">
-
 
         <h2>
             Quick Actions
         </h2>
 
-
         <div class="action-grid">
-
 
             <div class="action-card">
 
-                🥗
+                <div class="quick-icon">
+                    🥗
+                </div>
 
                 <h3>
                     Generate Meal Plan
@@ -127,10 +124,11 @@
             </div>
 
 
-
             <div class="action-card">
 
-                📊
+                <div class="quick-icon">
+                    📊
+                </div>
 
                 <h3>
                     Track Calories
@@ -143,11 +141,11 @@
             </div>
 
 
-
-
             <div class="action-card">
 
-                👤
+                <div class="quick-icon">
+                    👤
+                </div>
 
                 <h3>
                     Update Profile
@@ -159,83 +157,605 @@
 
             </div>
 
-
-
         </div>
-
 
     </section>
 
 
+<!-- ==================================================
+     DAILY LOGGING (PURE CSS MODALS - NO JS)
+================================================== -->
+<section class="daily-logging">
+
+    <div class="section-heading">
+        <h2>Track Your Daily Activity</h2>
+        <p>Keep your nutrition, hydration, and weight on track.</p>
+    </div>
+
+    <!-- Hidden radio inputs to manage modal state natively -->
+    <input type="radio" id="modal-close" name="modal-toggle" class="modal-state" checked hidden>
+    <input type="radio" id="modal-food" name="modal-toggle" class="modal-state" hidden>
+    <input type="radio" id="modal-water" name="modal-toggle" class="modal-state" hidden>
+    <input type="radio" id="modal-weight" name="modal-toggle" class="modal-state" hidden>
+
+    <!-- FLOATING CARDS GRID -->
+    <div class="floating-cards-grid">
+
+        <!-- FOOD CARD -->
+        <div class="float-card food-card">
+            <div class="card-badge">Nutrition</div>
+            <div class="float-card-icon">🍽️</div>
+            <h3>Log Food</h3>
+            <p>Record your meals and keep tabs on daily calories and nutrients.</p>
+            <label for="modal-food" class="card-action-btn">
+                Log Meal <span>→</span>
+            </label>
+        </div>
+
+        <!-- WATER CARD -->
+        <div class="float-card water-card">
+            <div class="card-badge">Hydration</div>
+            <div class="float-card-icon">💧</div>
+            <h3>Log Water</h3>
+            <p>Track your daily water intake and stay consistently hydrated.</p>
+            <label for="modal-water" class="card-action-btn">
+                Log Water <span>→</span>
+            </label>
+        </div>
+
+        <!-- WEIGHT CARD -->
+        <div class="float-card weight-card">
+            <div class="card-badge">Progress</div>
+            <div class="float-card-icon">⚖️</div>
+            <h3>Log Weight</h3>
+            <p>Monitor your weight body-metric trends over time.</p>
+            <label for="modal-weight" class="card-action-btn">
+                Save Weight <span>→</span>
+            </label>
+        </div>
+
+    </div>
+
+    <!-- MODAL OVERLAY -->
+    <div class="modal-overlay">
+
+        <!-- Backdrop click target to close modal -->
+        <label for="modal-close" class="modal-backdrop"></label>
+
+        <div class="modal-card">
+            <!-- Close Button -->
+            <label for="modal-close" class="modal-close">&times;</label>
+
+            <!-- FOOD FORM -->
+            <div class="modal-form-content food-form">
+
+                <div class="modal-header">
+                    <span class="modal-badge food-bg">🍽 Food</span>
+                    <h2>Log Your Food</h2>
+                </div>
+            
+                <div class="form-fields-wrapper">
+            
+                    <p>
+                        <label for="food-name">What did you eat?</label>
+            
+                        <input
+                            type="text"
+                            id="food-name"
+                            name="food_name"
+                            placeholder="e.g. Dal bhat, momo, apple..."
+                            required
+                        >
+                    </p>
+            
+                    <button type="submit" class="modal-submit-btn food-btn">
+                        Log Food
+                    </button>
+            
+                </div>
+            
+            </div>
+
+            <!-- WATER FORM -->
+            <div class="modal-form-content water-form">
+                <div class="modal-header">
+                    <span class="modal-badge water-bg">💧 Hydration Log</span>
+                    <h2>Log Water Intake</h2>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-fields-wrapper">
+                        {{ water_form.as_p }}
+                    </div>
+                    <button type="submit" name="water_submit" class="modal-submit-btn water-btn">Save Water</button>
+                </form>
+            </div>
+
+            <!-- WEIGHT FORM -->
+            <div class="modal-form-content weight-form">
+                <div class="modal-header">
+                    <span class="modal-badge weight-bg">⚖️ Body Weight</span>
+                    <h2>Record Weight</h2>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-fields-wrapper">
+                        {{ weight_form.as_p }}
+                    </div>
+                    <button type="submit" name="weight_submit" class="modal-submit-btn weight-btn">Save Weight</button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+    <!-- ==================================================
+         RECENT ACTIVITY
+    ================================================== -->
+
+    <section class="recent-activity">
+
+        <div class="section-heading">
+
+            <h2>
+                Recent Activity
+            </h2>
+
+            <p>
+                Your latest nutrition records.
+            </p>
+
+        </div>
 
 
-    <!-- Today's Meal -->
+        <div class="recent-grid">
+
+
+            <!-- ==========================
+                 RECENT MEALS
+            ========================== -->
+
+            <div class="recent-card">
+
+                <div class="recent-card-header">
+
+                    <div class="recent-small-icon food-small">
+                        🍽️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Recent Meals
+                        </h3>
+
+                        <span>
+                            Latest food entries
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="recent-list">
+
+                    {% if recent_meals %}
+
+                        {% for meal in recent_meals %}
+
+                            <div class="recent-item">
+
+                                <div>
+
+                                    <strong>
+                                        {{ meal.food.name }}
+                                    </strong>
+
+                                    <span>
+                                        {{ meal.meal_type }}
+                                    </span>
+
+                                </div>
+
+                                <span class="recent-value">
+                                    {{ meal.quantity }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="empty-state">
+
+                            <span>
+                                🍽️
+                            </span>
+
+                            <p>
+                                No meals logged yet.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================
+                 RECENT WATER
+            ========================== -->
+
+            <div class="recent-card">
+
+                <div class="recent-card-header">
+
+                    <div class="recent-small-icon water-small">
+                        💧
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Recent Water
+                        </h3>
+
+                        <span>
+                            Latest hydration entries
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="recent-list">
+
+                    {% if recent_water %}
+
+                        {% for water in recent_water %}
+
+                            <div class="recent-item">
+
+                                <div>
+
+                                    <strong>
+                                        Water
+                                    </strong>
+
+                                    <span>
+                                        {{ water.consumed_at|date:"M d, H:i" }}
+                                    </span>
+
+                                </div>
+
+                                <span class="recent-value">
+                                    {{ water.amount_ml }} ml
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="empty-state">
+
+                            <span>
+                                💧
+                            </span>
+
+                            <p>
+                                No water logged yet.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================
+                 RECENT WEIGHT
+            ========================== -->
+
+            <div class="recent-card">
+
+                <div class="recent-card-header">
+
+                    <div class="recent-small-icon weight-small">
+                        ⚖️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Recent Weight
+                        </h3>
+
+                        <span>
+                            Latest weight records
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="recent-list">
+
+                    {% if recent_weight %}
+
+                        {% for weight in recent_weight %}
+
+                            <div class="recent-item">
+
+                                <div>
+
+                                    <strong>
+                                        Weight
+                                    </strong>
+
+                                    <span>
+                                        {{ weight.recorded_at|date:"M d, Y" }}
+                                    </span>
+
+                                </div>
+
+                                <span class="recent-value">
+                                    {{ weight.weight }} kg
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="empty-state">
+
+                            <span>
+                                ⚖️
+                            </span>
+
+                            <p>
+                                No weight records yet.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         TODAY'S SUGGESTED MEALS
+    ================================================== -->
 
     <section class="today-meal">
 
+        <div class="section-heading">
 
-        <h2>
-            Today's Suggested Meals
-        </h2>
+            <h2>
+                Today's Suggested Meals
+            </h2>
+
+            <p>
+                Simple suggestions to help you stay on track.
+            </p>
+
+        </div>
 
 
         <div class="meal-grid">
 
 
+            <!-- DAL BHAT -->
+
             <div class="meal-card">
 
-                🍚
+                <div class="meal-icon">
+                    🍚
+                </div>
 
                 <h3>
                     Dal Bhat
                 </h3>
 
                 <p>
-                    650 kcal | Protein 25g
+                    650 kcal
+                    <span>•</span>
+                    Protein 25g
                 </p>
+
+                <span class="meal-tag">
+                    Balanced
+                </span>
 
             </div>
 
 
+            <!-- SALAD -->
 
             <div class="meal-card">
 
-                🥗
+                <div class="meal-icon">
+                    🥗
+                </div>
 
                 <h3>
                     Green Salad
                 </h3>
 
                 <p>
-                    120 kcal | Fiber rich
+                    120 kcal
+                    <span>•</span>
+                    Fiber rich
                 </p>
+
+                <span class="meal-tag">
+                    Light
+                </span>
 
             </div>
 
 
+            <!-- YOGURT -->
 
             <div class="meal-card">
 
-                🥛
+                <div class="meal-icon">
+                    🥛
+                </div>
 
                 <h3>
                     Yogurt
                 </h3>
 
                 <p>
-                    90 kcal | Calcium source
+                    90 kcal
+                    <span>•</span>
+                    Calcium source
                 </p>
+
+                <span class="meal-tag">
+                    Healthy
+                </span>
 
             </div>
 
 
         </div>
 
-
     </section>
 
 
 </section>
+
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
+
+<script>
+
+function openLog(type) {
+
+    const modal =
+        document.getElementById("loggingModal");
+
+    const forms =
+        document.querySelectorAll(".modal-form");
+
+
+    /* Hide every form first */
+
+    forms.forEach(function(form) {
+
+        form.style.display = "none";
+
+    });
+
+
+    /* Show selected form */
+
+    if (type === "food") {
+
+        document.getElementById("foodForm")
+            .style.display = "block";
+
+    }
+
+
+    if (type === "water") {
+
+        document.getElementById("waterForm")
+            .style.display = "block";
+
+    }
+
+
+    if (type === "weight") {
+
+        document.getElementById("weightForm")
+            .style.display = "block";
+
+    }
+
+
+    /* Open modal */
+
+    modal.classList.add("show");
+
+    document.body.style.overflow = "hidden";
+
+}
+
+
+
+function closeLog() {
+
+    const modal =
+        document.getElementById("loggingModal");
+
+    modal.classList.remove("show");
+
+    document.body.style.overflow = "";
+
+}
+
+
+
+/* Close when clicking outside */
+
+window.addEventListener("click", function(event) {
+
+    const modal =
+        document.getElementById("loggingModal");
+
+
+    if (event.target === modal) {
+
+        closeLog();
+
+    }
+
+});
+
+
+
+/* Close with Escape */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        closeLog();
+
+    }
+
+});
+
+</script>
 
 
 {% endblock %}

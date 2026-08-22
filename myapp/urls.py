@@ -39,5 +39,8 @@ urlpatterns = [
     path("dashboard/", views.userdash, name="userdash"),
     
     path("profile/setup/",views.profilesetup,name="profilesetup"),
+    path('log-meal/', views.log_meal, name='log_meal'),
+    path('log-water/', views.log_water, name='log_water'),
+    path('log-weight/', views.log_weight, name='log_weight'),
 
-]
+]   
