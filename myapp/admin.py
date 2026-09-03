@@ -5,6 +5,7 @@ from .models import (
     DietaryTag,
     Allergen,
     Food,
+    FoodVariant,
     MealLog,
     WaterLog,
     WeightLog,
@@ -82,26 +83,88 @@ class FoodAdmin(admin.ModelAdmin):
         'allergens',
     )
 
-
-@admin.register(MealLog)
-class MealLogAdmin(admin.ModelAdmin):
+@admin.register(FoodVariant)
+class FoodVariantAdmin(admin.ModelAdmin):
     list_display = (
-        'user',
         'food',
-        'meal_type',
-        'quantity',
-        'consumed_at',
+        'name',
+        'calories',
+        'protein',
+        'carbohydrates',
+        'fat',
+        'fiber',
+        'serving_size',
+        'serving_unit',
     )
 
     search_fields = (
-        'user__username',
         'food__name',
+        'name',
     )
 
     list_filter = (
-        'meal_type',
-        'consumed_at',
+        'food',
     )
+
+
+@admin.register(MealLog)
+class MealLogAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "user",
+        "food_name",
+        "category",
+        "meal_type",
+        "quantity",
+        "calories",
+        "protein",
+        "carbohydrates",
+        "fat",
+        "fiber",
+        "consumed_at",
+    )
+
+    list_filter = (
+        "meal_type",
+        "food__category",
+    )
+
+    search_fields = (
+        "user__username",
+        "food_name",
+        "food__name",
+    )
+
+    def category(self, obj):
+        if obj.food and obj.food.category:
+            return obj.food.category.name
+        return "-"
+
+    def protein(self, obj):
+        if obj.food:
+            return obj.food.protein
+        return 0
+
+    def carbohydrates(self, obj):
+        if obj.food:
+            return obj.food.carbohydrates
+        return 0
+
+    def fat(self, obj):
+        if obj.food:
+            return obj.food.fat
+        return 0
+
+    def fiber(self, obj):
+        if obj.food:
+            return obj.food.fiber
+        return 0
+
+    category.short_description = "Category"
+    protein.short_description = "Protein"
+    carbohydrates.short_description = "Carbohydrates"
+    fat.short_description = "Fat"
+    fiber.short_description = "Fiber"
 
 
 @admin.register(WaterLog)

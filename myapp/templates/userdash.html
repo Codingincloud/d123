@@ -152,6 +152,7 @@
                         Edit Profile
                     </a>
                 </h3>
+
                 <p>
                     Manage your nutrition preferences.
                 </p>
@@ -163,140 +164,975 @@
     </section>
 
 
-<!-- ==================================================
-     DAILY LOGGING 
-================================================== -->
-<section class="daily-logging">
+    <!-- ==================================================
+         DAILY LOGGING
+    ================================================== -->
 
-    <div class="section-heading">
-        <h2>Track Your Daily Activity</h2>
-        <p>Keep your nutrition, hydration, and weight on track.</p>
-    </div>
+    <section class="daily-logging">
 
-    <!-- Hidden radio inputs to manage modal state natively -->
-    <input type="radio" id="modal-close" name="modal-toggle" class="modal-state" checked hidden>
-    <input type="radio" id="modal-food" name="modal-toggle" class="modal-state" hidden>
-    <input type="radio" id="modal-water" name="modal-toggle" class="modal-state" hidden>
-    <input type="radio" id="modal-weight" name="modal-toggle" class="modal-state" hidden>
+        <div class="section-heading">
 
-    <!-- FLOATING CARDS GRID -->
-    <div class="floating-cards-grid">
+            <h2>
+                Track Your Daily Activity
+            </h2>
 
-        <!-- FOOD CARD -->
-        <div class="float-card food-card">
-            <div class="card-badge">Nutrition</div>
-            <div class="float-card-icon">🍽️</div>
-            <h3>Log Food</h3>
-            <p>Record your meals and keep tabs on daily calories and nutrients.</p>
-            <label for="modal-food" class="card-action-btn">
-                Log Meal <span>→</span>
-            </label>
+            <p>
+                Keep your nutrition, hydration, and weight on track.
+            </p>
+
         </div>
 
-        <!-- WATER CARD -->
-        <div class="float-card water-card">
-            <div class="card-badge">Hydration</div>
-            <div class="float-card-icon">💧</div>
-            <h3>Log Water</h3>
-            <p>Track your daily water intake and stay consistently hydrated.</p>
-            <label for="modal-water" class="card-action-btn">
-                Log Water <span>→</span>
-            </label>
-        </div>
 
-        <!-- WEIGHT CARD -->
-        <div class="float-card weight-card">
-            <div class="card-badge">Progress</div>
-            <div class="float-card-icon">⚖️</div>
-            <h3>Log Weight</h3>
-            <p>Monitor your weight body-metric trends over time.</p>
-            <label for="modal-weight" class="card-action-btn">
-                Save Weight <span>→</span>
-            </label>
-        </div>
+        <!-- Hidden radio inputs to manage modal state -->
 
-    </div>
+        <input
+            type="radio"
+            id="modal-close"
+            name="modal-toggle"
+            class="modal-state"
+            checked
+            hidden
+        >
 
-    <!-- MODAL OVERLAY -->
-    <div class="modal-overlay">
+        <input
+            type="radio"
+            id="modal-food"
+            name="modal-toggle"
+            class="modal-state"
+            hidden
+        >
 
-        <!-- Backdrop click target to close modal -->
-        <label for="modal-close" class="modal-backdrop"></label>
+        <input
+            type="radio"
+            id="modal-water"
+            name="modal-toggle"
+            class="modal-state"
+            hidden
+        >
 
-        <div class="modal-card">
-            <!-- Close Button -->
-            <label for="modal-close" class="modal-close">&times;</label>
+        <input
+            type="radio"
+            id="modal-weight"
+            name="modal-toggle"
+            class="modal-state"
+            hidden
+        >
 
-            <!-- FOOD FORM -->
-            <div class="modal-form-content food-form">
 
-                <div class="modal-header">
-                    <span class="modal-badge food-bg">🍽 Food</span>
-                    <h2>Log Your Food</h2>
+        <!-- FLOATING CARDS GRID -->
+
+        <div class="floating-cards-grid">
+
+
+            <!-- FOOD CARD -->
+
+            <div class="float-card food-card">
+
+                <div class="card-badge">
+                    Nutrition
                 </div>
 
-            <form method="POST" action="">
-                   {% csrf_token %}
-            
-                <div class="form-fields-wrapper">
-            
-                    <p>
-                        <label for="food-name">What did you eat?</label>
-            
-                        <input
-                            type="text"
-                            id="food-name"
-                            name="food_name"
-                            placeholder="e.g. Dal bhat, momo, apple..."
-                            required
+                <div class="float-card-icon">
+                    🍽️
+                </div>
+
+                <h3>
+                    Log Food
+                </h3>
+
+                <p>
+                    Record your meals and keep tabs on daily calories and nutrients.
+                </p>
+
+                <label
+                    for="modal-food"
+                    class="card-action-btn"
+                >
+                    Log Meal <span>→</span>
+                </label>
+
+            </div>
+
+
+            <!-- WATER CARD -->
+
+            <div class="float-card water-card">
+
+                <div class="card-badge">
+                    Hydration
+                </div>
+
+                <div class="float-card-icon">
+                    💧
+                </div>
+
+                <h3>
+                    Log Water
+                </h3>
+
+                <p>
+                    Track your daily water intake and stay consistently hydrated.
+                </p>
+
+                <label
+                    for="modal-water"
+                    class="card-action-btn"
+                >
+                    Log Water <span>→</span>
+                </label>
+
+            </div>
+
+
+            <!-- WEIGHT CARD -->
+
+            <div class="float-card weight-card">
+
+                <div class="card-badge">
+                    Progress
+                </div>
+
+                <div class="float-card-icon">
+                    ⚖️
+                </div>
+
+                <h3>
+                    Log Weight
+                </h3>
+
+                <p>
+                    Monitor your weight body-metric trends over time.
+                </p>
+
+                <label
+                    for="modal-weight"
+                    class="card-action-btn"
+                >
+                    Save Weight <span>→</span>
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             MODAL
+        ================================================== -->
+
+        <div class="modal-overlay">
+
+            <!-- Backdrop -->
+
+            <label
+                for="modal-close"
+                class="modal-backdrop"
+            ></label>
+
+
+            <div class="modal-card">
+
+
+                <!-- CLOSE BUTTON -->
+
+                <label
+                    for="modal-close"
+                    class="modal-close"
+                >
+                    &times;
+                </label>
+
+
+
+                <!-- ==================================================
+                     FOOD FORM
+                ================================================== -->
+
+                <div class="modal-form-content food-form">
+
+                    <div class="modal-header">
+
+                        <span class="modal-badge food-bg">
+                            🍽 Food
+                        </span>
+
+                        <h2>
+                            Log Your Food
+                        </h2>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action=""
+                    >
+
+                        {% csrf_token %}
+
+
+                        <div class="form-fields-wrapper">
+
+
+                            <!-- ==========================
+                                 FOOD NAME
+                            ========================== -->
+
+                            <p>
+
+                                <label for="food-name">
+                                    What did you eat?
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="food-name"
+                                    name="food_name"
+                                    placeholder="e.g. Pizza, Momo, Dal Bhat..."
+                                    autocomplete="off"
+                                    required
+                                >
+
+                            </p>
+
+
+
+                            <!-- ==========================
+                                 FOOD SUGGESTION
+                            ========================== -->
+
+                            <div
+                                id="food-suggestion"
+                                style="display: none;"
+                            >
+
+                                <p>
+                                    <strong>
+                                        Food found:
+                                    </strong>
+                                </p>
+
+
+                                <button
+                                    type="button"
+                                    id="food-option"
+                                    class="food-choice"
+                                >
+                                </button>
+
+                            </div>
+
+
+
+                            <!-- ==========================
+                                 UNKNOWN FOOD
+                            ========================== -->
+
+                            <div
+                                id="manual-food-container"
+                                style="display: none;"
+                            >
+
+                                <p>
+                                    <strong>
+                                        Food not found in database.
+                                    </strong>
+                                </p>
+
+                                <p>
+                                    Enter the nutrition information:
+                                </p>
+
+
+                                <!-- CALORIES -->
+
+                                <p>
+
+                                    <label for="manual-calories">
+                                        Calories (kcal)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="manual-calories"
+                                        name="manual_calories"
+                                        min="0"
+                                        step="0.1"
+                                        placeholder="e.g. 450"
+                                    >
+
+                                </p>
+
+
+                                <!-- PROTEIN -->
+
+                                <p>
+
+                                    <label for="manual-protein">
+                                        Protein (g)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="manual-protein"
+                                        name="manual_protein"
+                                        min="0"
+                                        step="0.1"
+                                        placeholder="e.g. 15"
+                                    >
+
+                                </p>
+
+
+                                <!-- CARBOHYDRATES -->
+
+                                <p>
+
+                                    <label for="manual-carbohydrates">
+                                        Carbohydrates (g)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="manual-carbohydrates"
+                                        name="manual_carbohydrates"
+                                        min="0"
+                                        step="0.1"
+                                        placeholder="e.g. 70"
+                                    >
+
+                                </p>
+
+
+                                <!-- FAT -->
+
+                                <p>
+
+                                    <label for="manual-fat">
+                                        Fat (g)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="manual-fat"
+                                        name="manual_fat"
+                                        min="0"
+                                        step="0.1"
+                                        placeholder="e.g. 10"
+                                    >
+
+                                </p>
+
+
+                                <!-- FIBER -->
+
+                                <p>
+
+                                    <label for="manual-fiber">
+                                        Fiber (g)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="manual-fiber"
+                                        name="manual_fiber"
+                                        min="0"
+                                        step="0.1"
+                                        placeholder="e.g. 8"
+                                    >
+
+                                </p>
+
+                            </div>
+
+
+
+                            <!-- ==========================
+                                 FOOD VARIANTS
+                            ========================== -->
+
+                            <div
+                                id="variant-container"
+                                style="display: none;"
+                            >
+
+                                <p>
+                                    <strong>
+                                        Choose an option:
+                                    </strong>
+                                </p>
+
+
+                                <div
+                                    id="variant-options"
+                                    class="food-options"
+                                ></div>
+
+
+                                <input
+                                    type="hidden"
+                                    id="variant-id"
+                                    name="variant_id"
+                                >
+
+                            </div>
+
+
+
+                            <!-- ==========================
+                                 MEAL TYPE
+                            ========================== -->
+
+                            <p>
+
+                                <label for="meal-type">
+                                    Meal Type
+                                </label>
+
+                                <select
+                                    id="meal-type"
+                                    name="meal_type"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select meal type
+                                    </option>
+
+                                    <option value="breakfast">
+                                        Breakfast
+                                    </option>
+
+                                    <option value="lunch">
+                                        Lunch
+                                    </option>
+
+                                    <option value="dinner">
+                                        Dinner
+                                    </option>
+
+                                    <option value="snack">
+                                        Snack
+                                    </option>
+
+                                </select>
+
+                            </p>
+
+
+
+                            <!-- ==========================
+                                 SUBMIT
+                            ========================== -->
+
+                            <button
+                                type="submit"
+                                name="meal_submit"
+                                value="1"
+                                class="modal-submit-btn food-btn"
+                            >
+                                Log Food
+                            </button>
+
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+
+                <!-- ==================================================
+                     FOOD JAVASCRIPT
+                ================================================== -->
+
+                <script>
+
+                const foods = [
+
+                    {% for food in foods %}
+
+                    {
+                        id: "{{ food.id }}",
+
+                        name: "{{ food.name|escapejs }}",
+
+                        variants: [
+
+                            {% for variant in food.variants.all %}
+
+                            {
+                                id: "{{ variant.id }}",
+                                name: "{{ variant.name|escapejs }}"
+                            },
+
+                            {% endfor %}
+
+                        ]
+                    },
+
+                    {% endfor %}
+
+                ];
+
+
+                /* =========================================
+                   PREVIOUSLY LOGGED CUSTOM FOODS
+                ========================================= */
+
+                const customFoods = [
+
+                    {% for meal in custom_foods %}
+
+                    {
+                        name: "{{ meal.food_name|escapejs }}",
+
+                        calories: "{{ meal.calories }}",
+
+                        protein: "{{ meal.protein }}",
+
+                        carbohydrates: "{{ meal.carbohydrates }}",
+
+                        fat: "{{ meal.fat }}",
+
+                        fiber: "{{ meal.fiber }}"
+                    },
+
+                    {% endfor %}
+
+                ];
+
+
+                /* =========================================
+                   GET ELEMENTS
+                ========================================= */
+
+                const foodInput =
+                    document.getElementById("food-name");
+
+
+                const foodSuggestion =
+                    document.getElementById("food-suggestion");
+
+
+                const foodOption =
+                    document.getElementById("food-option");
+
+
+                const variantContainer =
+                    document.getElementById("variant-container");
+
+
+                const variantOptions =
+                    document.getElementById("variant-options");
+
+
+                const variantId =
+                    document.getElementById("variant-id");
+
+
+                const manualFoodContainer =
+                    document.getElementById("manual-food-container");
+
+
+                const manualCalories =
+                    document.getElementById("manual-calories");
+
+
+                const manualProtein =
+                    document.getElementById("manual-protein");
+
+
+                const manualCarbohydrates =
+                    document.getElementById("manual-carbohydrates");
+
+
+                const manualFat =
+                    document.getElementById("manual-fat");
+
+
+                const manualFiber =
+                    document.getElementById("manual-fiber");
+
+
+                let selectedFood = null;
+
+                let selectedCustomFood = null;
+
+
+
+                /* =========================================
+                   USER TYPES FOOD
+                ========================================= */
+
+                foodInput.addEventListener(
+                    "input",
+                    function() {
+
+                        const typedFood =
+                            foodInput.value
+                                .trim()
+                                .toLowerCase();
+
+
+                        selectedFood = null;
+
+                        selectedCustomFood = null;
+
+
+                        foodSuggestion.style.display =
+                            "none";
+
+
+                        variantContainer.style.display =
+                            "none";
+
+
+                        manualFoodContainer.style.display =
+                            "none";
+
+
+                        variantOptions.innerHTML =
+                            "";
+
+
+                        variantId.value =
+                            "";
+
+
+                        /* Clear previous manual values */
+
+                        manualCalories.value = "";
+
+                        manualProtein.value = "";
+
+                        manualCarbohydrates.value = "";
+
+                        manualFat.value = "";
+
+                        manualFiber.value = "";
+
+
+                        if (!typedFood) {
+                            return;
+                        }
+
+
+
+                        /* =====================================
+                           CHECK DATABASE FOOD
+                        ===================================== */
+
+                        const match =
+                            foods.find(function(food) {
+
+                                return food.name
+                                    .toLowerCase() === typedFood;
+
+                            });
+
+
+                        if (match) {
+
+                            selectedFood =
+                                match;
+
+
+                            foodOption.textContent =
+                                "🍽️ " + match.name;
+
+
+                            foodSuggestion.style.display =
+                                "block";
+
+
+                            return;
+                        }
+
+
+
+                        /* =====================================
+                           CHECK PREVIOUS CUSTOM FOOD
+                        ===================================== */
+
+                        const customMatch =
+                            customFoods.find(function(food) {
+
+                                return food.name
+                                    .toLowerCase() === typedFood;
+
+                            });
+
+
+                        if (customMatch) {
+
+                            selectedCustomFood =
+                                customMatch;
+
+
+                            foodOption.textContent =
+                                "🍽️ " +
+                                customMatch.name +
+                                " (Previously logged)";
+
+
+                            foodSuggestion.style.display =
+                                "block";
+
+
+                            return;
+                        }
+
+
+
+                        /* =====================================
+                           COMPLETELY NEW FOOD
+                        ===================================== */
+
+                        manualFoodContainer.style.display =
+                            "block";
+
+                    }
+                );
+
+
+
+                /* =========================================
+                   USER CLICKS FOUND FOOD
+                ========================================= */
+
+                foodOption.addEventListener(
+                    "click",
+                    function() {
+
+
+                        /* =================================
+                           PREVIOUSLY LOGGED CUSTOM FOOD
+                        ================================= */
+
+                        if (selectedCustomFood) {
+
+                            manualFoodContainer.style.display =
+                                "block";
+
+
+                            manualCalories.value =
+                                selectedCustomFood.calories;
+
+
+                            manualProtein.value =
+                                selectedCustomFood.protein;
+
+
+                            manualCarbohydrates.value =
+                                selectedCustomFood.carbohydrates;
+
+
+                            manualFat.value =
+                                selectedCustomFood.fat;
+
+
+                            manualFiber.value =
+                                selectedCustomFood.fiber;
+
+
+                            foodSuggestion.style.display =
+                                "none";
+
+
+                            return;
+                        }
+
+
+
+                        /* =================================
+                           DATABASE FOOD
+                        ================================= */
+
+                        if (!selectedFood) {
+                            return;
+                        }
+
+
+                        variantOptions.innerHTML =
+                            "";
+
+                        variantId.value =
+                            "";
+
+
+                        if (selectedFood.variants.length > 0) {
+
+                            selectedFood.variants.forEach(
+                                function(variant) {
+
+
+                                    const button =
+                                        document.createElement(
+                                            "button"
+                                        );
+
+
+                                    button.type =
+                                        "button";
+
+
+                                    button.className =
+                                        "food-option-btn";
+
+
+                                    button.textContent =
+                                        variant.name;
+
+
+                                    button.addEventListener(
+                                        "click",
+                                        function() {
+
+
+                                            document
+                                                .querySelectorAll(
+                                                    "#variant-options .food-option-btn"
+                                                )
+                                                .forEach(
+                                                    function(btn) {
+
+                                                        btn.classList
+                                                            .remove(
+                                                                "selected"
+                                                            );
+
+                                                    }
+                                                );
+
+
+                                            button.classList.add(
+                                                "selected"
+                                            );
+
+
+                                            variantId.value =
+                                                variant.id;
+
+                                        }
+                                    );
+
+
+                                    variantOptions.appendChild(
+                                        button
+                                    );
+
+                                }
+                            );
+
+
+                            variantContainer.style.display =
+                                "block";
+
+                        }
+
+                    }
+                );
+
+                </script>
+
+
+
+                <!-- ==================================================
+                     WATER FORM
+                ================================================== -->
+
+                <div class="modal-form-content water-form">
+
+                    <div class="modal-header">
+
+                        <span class="modal-badge water-bg">
+                            💧 Hydration Log
+                        </span>
+
+                        <h2>
+                            Log Water Intake
+                        </h2>
+
+                    </div>
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="form-fields-wrapper">
+
+                            {{ water_form.as_p }}
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            name="water_submit"
+                            class="modal-submit-btn water-btn"
                         >
-                    </p>
-    
-            
-                    <button type="submit" name="meal_submit" value="1" class="modal-submit-btn food-btn">
-                        Log Food
-                    </button>
-            
-                </div>
-            </form>
-            
-            </div>
+                            Save Water
+                        </button>
 
-            <!-- WATER FORM -->
-            <div class="modal-form-content water-form">
-                <div class="modal-header">
-                    <span class="modal-badge water-bg">💧 Hydration Log</span>
-                    <h2>Log Water Intake</h2>
-                </div>
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="form-fields-wrapper">
-                        {{ water_form.as_p }}
-                    </div>
-                    <button type="submit" name="water_submit" class="modal-submit-btn water-btn">Save Water</button>
-                </form>
-            </div>
+                    </form>
 
-            <!-- WEIGHT FORM -->
-            <div class="modal-form-content weight-form">
-                <div class="modal-header">
-                    <span class="modal-badge weight-bg">⚖️ Body Weight</span>
-                    <h2>Record Weight</h2>
                 </div>
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="form-fields-wrapper">
-                        {{ weight_form.as_p }}
+
+
+
+                <!-- ==================================================
+                     WEIGHT FORM
+                ================================================== -->
+
+                <div class="modal-form-content weight-form">
+
+                    <div class="modal-header">
+
+                        <span class="modal-badge weight-bg">
+                            ⚖️ Body Weight
+                        </span>
+
+                        <h2>
+                            Record Weight
+                        </h2>
+
                     </div>
-                    <button type="submit" name="weight_submit" class="modal-submit-btn weight-btn">Save Weight</button>
-                </form>
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="form-fields-wrapper">
+
+                            {{ weight_form.as_p }}
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            name="weight_submit"
+                            class="modal-submit-btn weight-btn"
+                        >
+                            Save Weight
+                        </button>
+
+                    </form>
+
+                </div>
+
+
             </div>
 
         </div>
 
-    </div>
+    </section>
 
-</section>
+
 
     <!-- ==================================================
          RECENT ACTIVITY
@@ -358,18 +1194,26 @@
                                 <div>
 
                                     <strong>
+
                                         {% if meal.food %}
-                                          {{ meal.food.name }}
+
+                                            {{ meal.food.name }}
+
                                         {% else %}
-                                          {{ meal.food_name }}
+
+                                            {{ meal.food_name }}
+
                                         {% endif %}
+
                                     </strong>
+
 
                                     <span>
                                         {{ meal.meal_type }}
                                     </span>
 
                                 </div>
+
 
                                 <span class="recent-value">
                                     {{ meal.quantity }}
@@ -398,6 +1242,7 @@
                 </div>
 
             </div>
+
 
 
             <!-- ==========================
@@ -447,6 +1292,7 @@
 
                                 </div>
 
+
                                 <span class="recent-value">
                                     {{ water.amount_ml }} ml
                                 </span>
@@ -474,6 +1320,7 @@
                 </div>
 
             </div>
+
 
 
             <!-- ==========================
@@ -523,6 +1370,7 @@
 
                                 </div>
 
+
                                 <span class="recent-value">
                                     {{ weight.weight }} kg
                                 </span>
@@ -555,6 +1403,7 @@
         </div>
 
     </section>
+
 
 
     <!-- ==================================================
@@ -604,6 +1453,7 @@
             </div>
 
 
+
             <!-- SALAD -->
 
             <div class="meal-card">
@@ -627,6 +1477,7 @@
                 </span>
 
             </div>
+
 
 
             <!-- YOGURT -->
@@ -663,7 +1514,7 @@
 
 
 <!-- ==================================================
-     JAVASCRIPT
+     OLD MODAL JAVASCRIPT
 ================================================== -->
 
 <script>
@@ -673,11 +1524,10 @@ function openLog(type) {
     const modal =
         document.getElementById("loggingModal");
 
+
     const forms =
         document.querySelectorAll(".modal-form");
 
-
-    /* Hide every form first */
 
     forms.forEach(function(form) {
 
@@ -685,8 +1535,6 @@ function openLog(type) {
 
     });
 
-
-    /* Show selected form */
 
     if (type === "food") {
 
@@ -712,8 +1560,6 @@ function openLog(type) {
     }
 
 
-    /* Open modal */
-
     modal.classList.add("show");
 
     document.body.style.overflow = "hidden";
@@ -727,6 +1573,7 @@ function closeLog() {
     const modal =
         document.getElementById("loggingModal");
 
+
     modal.classList.remove("show");
 
     document.body.style.overflow = "";
@@ -735,35 +1582,37 @@ function closeLog() {
 
 
 
-/* Close when clicking outside */
+window.addEventListener(
+    "click",
+    function(event) {
 
-window.addEventListener("click", function(event) {
-
-    const modal =
-        document.getElementById("loggingModal");
-
-
-    if (event.target === modal) {
-
-        closeLog();
-
-    }
-
-});
+        const modal =
+            document.getElementById("loggingModal");
 
 
+        if (event.target === modal) {
 
-/* Close with Escape */
+            closeLog();
 
-document.addEventListener("keydown", function(event) {
-
-    if (event.key === "Escape") {
-
-        closeLog();
+        }
 
     }
+);
 
-});
+
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Escape") {
+
+            closeLog();
+
+        }
+
+    }
+);
 
 </script>
 

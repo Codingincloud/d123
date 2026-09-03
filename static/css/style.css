@@ -2449,3 +2449,128 @@ body {
         text-align: center;
     }
 }
+
+
+
+/* =========================================
+   FOOD SEARCH & OPTIONS
+========================================= */
+
+/* Heading above options */
+.option-heading {
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+
+/* =========================================
+   FOUND FOOD
+========================================= */
+
+.food-choice {
+    width: 100%;
+    padding: 14px 16px;
+
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+    margin-bottom: 15px;
+
+    pointer-events: auto;
+    position: relative;
+    z-index: 5;
+}
+
+
+.food-choice:hover {
+    border-color: #8bc34a;
+    background: #f7fcef;
+    transform: translateY(-1px);
+}
+
+
+.food-choice.selected {
+    border-color: #8bc34a;
+    background: #f0f9e8;
+}
+
+
+/* =========================================
+   FOOD VARIANTS
+========================================= */
+
+.food-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+
+/* Individual variant */
+
+.food-option-btn {
+    flex: 1 1 calc(50% - 10px);
+
+    min-width: 120px;
+
+    padding: 12px 16px;
+
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+    pointer-events: auto;
+    position: relative;
+    z-index: 5;
+}
+
+
+.food-option-btn:hover {
+    border-color: #8bc34a;
+    background: #f7fcef;
+    transform: translateY(-1px);
+}
+
+
+.food-option-btn.selected {
+    border-color: #8bc34a;
+    background: #f0f9e8;
+
+    box-shadow:
+        0 0 0 2px rgba(139, 195, 74, 0.15);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .food-option-btn {
+        flex: 1 1 100%;
+    }
+
+}

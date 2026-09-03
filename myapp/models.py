@@ -96,6 +96,27 @@ class Food(models.Model):
     def __str__(self):
         return self.name
     
+class FoodVariant(models.Model):
+    food = models.ForeignKey(
+        Food,
+        on_delete=models.CASCADE,
+        related_name="variants"
+    )
+
+    name = models.CharField(max_length=100)
+
+    calories = models.FloatField()
+    protein = models.FloatField(default=0)
+    carbohydrates = models.FloatField(default=0)
+    fat = models.FloatField(default=0)
+    fiber = models.FloatField(default=0)
+
+    serving_size = models.FloatField(default=100)
+    serving_unit = models.CharField(max_length=30, default="g")
+
+    def __str__(self):
+        return f"{self.food.name} - {self.name}"
+    
 class MealLog(models.Model):
     MEAL_TYPES = [
         ("breakfast", "Breakfast"),
@@ -111,16 +132,14 @@ class MealLog(models.Model):
     )
 
     food = models.ForeignKey(
-    Food,
-    on_delete=models.SET_NULL,
-    null=True,
-    blank=True,
-    related_name="meal_logs"
+        Food,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="meal_logs"
     )
 
-    food_name = models.CharField(
-       max_length=200
-    )
+    food_name = models.CharField(max_length=200)
 
     meal_type = models.CharField(
         max_length=20,
@@ -128,6 +147,16 @@ class MealLog(models.Model):
     )
 
     quantity = models.FloatField(default=1)
+
+    calories = models.FloatField(default=0)
+
+    protein = models.FloatField(default=0)
+
+    carbohydrates = models.FloatField(default=0)
+
+    fat = models.FloatField(default=0)
+
+    fiber = models.FloatField(default=0)
 
     consumed_at = models.DateTimeField()
 

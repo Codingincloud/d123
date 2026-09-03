@@ -15,6 +15,7 @@ from .models import (
     MealLog,
     WaterLog,
     WeightLog,
+    FoodVariant
 )
 
 from .forms import (
@@ -190,67 +191,144 @@ def userdash(request):
 
 
     # --------------------------
-    # LOG FOOD
-    # --------------------------
-
-
-    # if request.method == "POST" and "meal_submit" in request.POST:
-
-    #   food_name = request.POST.get("food_name", "").strip()
-
-    #   if food_name:
-    #     try:
-    #         food = Food.objects.get(name__iexact=food_name)
-
-    #         MealLog.objects.create(
-    #             user=request.user,
-    #             food=food,
-    #             meal_type="snack",
-    #             quantity=1,
-    #             consumed_at=timezone.now(),
-    #         )
-
-    #         messages.success(
-    #             request,
-    #             f"{food.name} logged successfully!"
-    #         )
-
-    #         return redirect("userdash")
-
-    #     except Food.DoesNotExist:
-    #         messages.error(
-    #             request,
-    #             f"'{food_name}' was not found in the food database."
-    #         )
-
-    
-     # --------------------------
-    
-    # --------------------------
 
     # LOG FOOD
     # --------------------------
 
     if request.method == "POST" and "meal_submit" in request.POST:
 
-      food_name = request.POST.get("food_name", "").strip()
+        food_name = request.POST.get("food_name", "").strip()
+        variant_id = request.POST.get("variant_id")
+        meal_type = request.POST.get("meal_type")
 
-      if food_name:
-          MealLog.objects.create(
-            user=request.user,
-            food_name=food_name,
-            food=None,
-            meal_type="snack",
-            quantity=1,
-            consumed_at=timezone.now(),
-          )
+        # Manual nutrition values
+        manual_calories = request.POST.get("manual_calories")
+        manual_protein = request.POST.get("manual_protein")
+        manual_carbohydrates = request.POST.get("manual_carbohydrates")
+        manual_fat = request.POST.get("manual_fat")
+        manual_fiber = request.POST.get("manual_fiber")
 
-          messages.success(
-            request,
-            f"{food_name} logged successfully!"
-          )
+        if not food_name or not meal_type:
+            messages.error(
+                request,
+                "Please enter the food name and meal type."
+            )
+            return redirect("userdash")
 
-          return redirect("userdash")
+
+        try:
+
+            # =========================================
+            # CASE 1: FOOD VARIANT SELECTED
+            # =========================================
+
+            if variant_id:
+
+                variant = FoodVariant.objects.get(
+                    id=variant_id
+                )
+
+                MealLog.objects.create(
+                    user=request.user,
+                    food=variant.food,
+                    food_name=f"{variant.food.name} - {variant.name}",
+                    meal_type=meal_type,
+                    quantity=1,
+                    calories=variant.calories,
+                    protein=variant.protein,
+                    carbohydrates=variant.carbohydrates,
+                    fat=variant.fat,
+                    fiber=variant.fiber,
+                    consumed_at=timezone.now(),
+                )
+
+                messages.success(
+                    request,
+                    f"{variant.food.name} - {variant.name} logged successfully!"
+                )
+
+                return redirect("userdash")
+
+
+            # =========================================
+            # CASE 2: PREVIOUSLY SAVED CUSTOM FOOD
+            # =========================================
+
+            previous_custom_food = MealLog.objects.filter(
+                user=request.user,
+                food__isnull=True,
+                food_name__iexact=food_name
+            ).order_by("-consumed_at").first()
+
+
+            if previous_custom_food:
+
+                MealLog.objects.create(
+                    user=request.user,
+                    food=None,
+                    food_name=food_name,
+                    meal_type=meal_type,
+                    quantity=1,
+                    calories=previous_custom_food.calories,
+                    protein=previous_custom_food.protein,
+                    carbohydrates=previous_custom_food.carbohydrates,
+                    fat=previous_custom_food.fat,
+                    fiber=previous_custom_food.fiber,
+                    consumed_at=timezone.now(),
+                )
+
+                messages.success(
+                    request,
+                    f"{food_name} logged successfully using your saved nutrition!"
+                )
+
+                return redirect("userdash")
+
+
+            # =========================================
+            # CASE 3: COMPLETELY NEW MANUAL FOOD
+            # =========================================
+
+            if not manual_calories:
+
+                messages.error(
+                    request,
+                    "Please enter the calories for this food."
+                )
+
+                return redirect("userdash")
+
+
+            MealLog.objects.create(
+                user=request.user,
+                food=None,
+                food_name=food_name,
+                meal_type=meal_type,
+                quantity=1,
+                calories=float(manual_calories),
+                protein=float(manual_protein or 0),
+                carbohydrates=float(manual_carbohydrates or 0),
+                fat=float(manual_fat or 0),
+                fiber=float(manual_fiber or 0),
+                consumed_at=timezone.now(),
+            )
+
+            messages.success(
+                request,
+                f"{food_name} logged successfully!"
+            )
+
+            return redirect("userdash")
+
+
+        except FoodVariant.DoesNotExist:
+
+            messages.error(
+                request,
+                "Selected food option was not found."
+            )
+
+            return redirect("userdash")
 
 # --------------------------
     # --------------------------
@@ -328,7 +406,11 @@ def userdash(request):
     ).order_by(
         "-recorded_at"
     )[:5]
-
+    
+    custom_foods = MealLog.objects.filter(
+        user=request.user,
+        food__isnull=True
+    ).order_by("-consumed_at")
 
     # --------------------------
     # DASHBOARD CONTEXT
@@ -347,6 +429,12 @@ def userdash(request):
         "recent_water": recent_water,
 
         "recent_weight": recent_weight,
+        
+        "foods": Food.objects.prefetch_related("variants"),
+            
+        "custom_foods": custom_foods,
+
+
 
     }
 
