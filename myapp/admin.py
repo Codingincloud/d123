@@ -22,8 +22,23 @@ class UserProfileAdmin(admin.ModelAdmin):
         'activity_level',
         'goal',
         'daily_calorie_target',
+        'display_allergies',
+        'display_dietary_tags',
     )
+ 
+    def display_allergies(self, obj):
+            return ", ".join(
+                allergy.name for allergy in obj.allergies.all()
+            )
 
+    display_allergies.short_description = "Allergies"
+
+    def display_dietary_tags(self, obj):
+            return ", ".join(
+                tag.name for tag in obj.dietary_tags.all()
+            )
+
+    display_dietary_tags.short_description = "Dietary Tags"
     search_fields = (
         'user__username',
         'user__email',

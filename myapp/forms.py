@@ -29,6 +29,10 @@ class UserProfileForm(forms.ModelForm):
             "weight",
             "activity_level",
             "goal",
+            "allergies",
+            "dietary_tags",
+            "custom_allergies",
+            "custom_dietary_tags",
         ]
 
         widgets = {
@@ -43,6 +47,20 @@ class UserProfileForm(forms.ModelForm):
                     ("Other", "Other"),
                 ],
                 attrs={"class": "form-control"}
+            ),
+            "allergies": forms.CheckboxSelectMultiple(),
+
+            "dietary_tags": forms.CheckboxSelectMultiple(),
+
+            "custom_allergies": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter another allergy..."
+                }
+            ),
+             "custom_dietary_tags": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter another dietary preference..."
+                }
             ),
             "activity_level": forms.Select(
                 choices=[

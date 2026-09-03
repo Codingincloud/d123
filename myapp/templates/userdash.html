@@ -41,11 +41,11 @@
             </h3>
 
             <h2>
-                1800 kcal
+                {{ today_calories|floatformat:0 }} kcal
             </h2>
 
             <p>
-                Recommended daily intake
+                Consumed today
             </p>
 
         </div>
@@ -57,16 +57,12 @@
                 💪
             </div>
 
-            <h3>
-                Protein Goal
-            </h3>
-
             <h2>
-                60g
+                {{ today_protein|floatformat:1 }}g
             </h2>
-
+            
             <p>
-                Daily protein target
+                Protein consumed today
             </p>
 
         </div>
@@ -81,14 +77,49 @@
             <h3>
                 Current Goal
             </h3>
-
+            
             <h2>
-                Maintain
+                {{ profile.get_goal_display }}
             </h2>
-
+            
             <p>
-                Health goal
+                Your nutrition goal
             </p>
+
+        </div>
+
+    </div>
+    
+    
+    <div class="energy-section">
+
+        <div class="energy-header">
+            <h3>Energy Overview</h3>
+            <p>Your estimated daily energy needs</p>
+        </div>
+
+        <div class="energy-cards">
+
+            <div class="energy-card">
+                <div class="energy-icon">🔥</div>
+
+                <div>
+                    <span>BMR</span>
+                    <h2>{{ bmr }} <small>kcal</small></h2>
+                    <p>Calories burned at rest</p>
+                </div>
+            </div>
+
+
+            <div class="energy-card">
+                <div class="energy-icon">⚡</div>
+
+                <div>
+                    <span>TDEE</span>
+                    <h2>{{ tdee }} <small>kcal</small></h2>
+                    <p>Estimated daily energy expenditure</p>
+                </div>
+            </div>
 
         </div>
 

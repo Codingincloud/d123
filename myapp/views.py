@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserEditForm, ProfileEditForm
 
+from .services.calculations import calculate_nutrition_baseline
 from .services.chatbot import ChatbotConfigurationError, ChatbotError, get_chatbot_reply
 
 from .models import (
@@ -208,13 +209,19 @@ def userdash(request):
 
         try:
 
-            UserProfile.objects.get(
+            profile = UserProfile.objects.get(
                 user=request.user
             )
 
         except UserProfile.DoesNotExist:
 
             return redirect("profilesetup")
+        
+        baseline = calculate_nutrition_baseline(profile)
+
+    else:
+
+        profile = None
 
 
     # --------------------------
@@ -430,6 +437,36 @@ def userdash(request):
     ).order_by(
         "-consumed_at"
     )[:5]
+        # =========================================
+    # TODAY'S NUTRITION TOTALS
+    # =========================================
+
+    today = timezone.localdate()
+
+    today_meals = MealLog.objects.filter(
+        user=request.user,
+        consumed_at__date=today
+    )
+
+    today_calories = sum(
+        meal.calories for meal in today_meals
+    )
+
+    today_protein = sum(
+        meal.protein for meal in today_meals
+    )
+
+    today_carbohydrates = sum(
+        meal.carbohydrates for meal in today_meals
+    )
+
+    today_fat = sum(
+        meal.fat for meal in today_meals
+    )
+
+    today_fiber = sum(
+        meal.fiber for meal in today_meals
+    )
 
 
     recent_water = WaterLog.objects.filter(
@@ -471,8 +508,24 @@ def userdash(request):
         "foods": Food.objects.prefetch_related("variants"),
             
         "custom_foods": custom_foods,
+        
+        "today_calories": today_calories,
+        
+        "today_protein": today_protein,
+        
+        "today_carbohydrates": today_carbohydrates,
+        
+        "today_fat": today_fat,
+        
+        "today_fiber": today_fiber,
 
-
+        "profile": profile,
+        
+        "baseline": baseline,
+        
+        "bmr": baseline["bmr"] if baseline else None,
+        
+        "tdee": baseline["tdee"] if baseline else None,
 
     }
 
@@ -524,6 +577,7 @@ def profilesetup(request):
             profile.user = request.user
 
             profile.save()
+            form.save_m2m()
 
             messages.success(
                 request,

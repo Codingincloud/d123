@@ -1,22 +1,356 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
     <title>Complete Profile</title>
-</head>
+
+    {% load static %}
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"></head>
 
 <body>
+
+<div class="profile-container">
 
     <h1>Complete Your Profile</h1>
 
     <form method="POST">
+
         {% csrf_token %}
 
-        {{ form.as_p }}
+        <!-- DATE OF BIRTH -->
 
-        <button type="submit">
+        <div class="form-group">
+
+            <label for="{{ form.date_of_birth.id_for_label }}">
+                Date of birth
+            </label>
+
+            {{ form.date_of_birth }}
+
+        </div>
+
+
+        <!-- GENDER -->
+
+        <div class="form-group">
+
+            <label for="{{ form.gender.id_for_label }}">
+                Gender
+            </label>
+
+            {{ form.gender }}
+
+        </div>
+
+
+        <!-- HEIGHT -->
+
+        <div class="form-group">
+
+            <label for="{{ form.height.id_for_label }}">
+                Height (cm)
+            </label>
+
+            {{ form.height }}
+
+        </div>
+
+
+        <!-- WEIGHT -->
+
+        <div class="form-group">
+
+            <label for="{{ form.weight.id_for_label }}">
+                Weight (kg)
+            </label>
+
+            {{ form.weight }}
+
+        </div>
+
+
+        <!-- ACTIVITY LEVEL -->
+
+        <div class="form-group">
+
+            <label for="{{ form.activity_level.id_for_label }}">
+                Activity level
+            </label>
+
+            {{ form.activity_level }}
+
+        </div>
+
+
+        <!-- GOAL -->
+
+        <div class="form-group">
+
+            <label for="{{ form.goal.id_for_label }}">
+                Goal
+            </label>
+
+            {{ form.goal }}
+
+        </div>
+
+
+        <!-- ALLERGIES -->
+
+        <div class="form-group">
+
+            <label class="section-label">
+                Allergies
+            </label>
+
+            <div class="choice-container">
+
+                {% for checkbox in form.allergies %}
+
+                    <label class="choice">
+
+                        {{ checkbox.tag }}
+
+                        <span>
+                            {{ checkbox.choice_label }}
+                        </span>
+
+                    </label>
+
+                {% empty %}
+
+                    <p class="empty-message">
+                        No allergies available.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <button
+                type="button"
+                class="other-button"
+                onclick="showCustom('allergy')"
+            >
+                ＋ Other
+            </button>
+
+
+            <div
+                id="allergy-custom"
+                class="custom-container"
+            >
+
+                <div id="allergy-list">
+
+                    <div class="custom-row">
+
+                        <input
+                            type="text"
+                            name="custom_allergy"
+                            placeholder="Enter another allergy..."
+                        >
+
+                        <button
+                            type="button"
+                            class="add-button"
+                            onclick="addCustom('allergy')"
+                        >
+                            ＋
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DIETARY TAGS -->
+
+        <div class="form-group">
+
+            <label class="section-label">
+                Dietary preferences
+            </label>
+
+            <div class="choice-container">
+
+                {% for checkbox in form.dietary_tags %}
+
+                    <label class="choice">
+
+                        {{ checkbox.tag }}
+
+                        <span>
+                            {{ checkbox.choice_label }}
+                        </span>
+
+                    </label>
+
+                {% empty %}
+
+                    <p class="empty-message">
+                        No dietary preferences available.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <button
+                type="button"
+                class="other-button"
+                onclick="showCustom('dietary')"
+            >
+                ＋ Other
+            </button>
+
+
+            <div
+                id="dietary-custom"
+                class="custom-container"
+            >
+
+                <div id="dietary-list">
+
+                    <div class="custom-row">
+
+                        <input
+                            type="text"
+                            name="custom_dietary_tag"
+                            placeholder="Enter another dietary preference..."
+                        >
+
+                        <button
+                            type="button"
+                            class="add-button"
+                            onclick="addCustom('dietary')"
+                        >
+                            ＋
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="save-button"
+        >
             Save Profile
         </button>
+
     </form>
+
+</div>
+
+
+<script>
+
+function showCustom(type) {
+
+    if (type === "allergy") {
+
+        document.getElementById(
+            "allergy-custom"
+        ).style.display = "block";
+
+    }
+
+    else if (type === "dietary") {
+
+        document.getElementById(
+            "dietary-custom"
+        ).style.display = "block";
+
+    }
+
+}
+
+
+function addCustom(type) {
+
+    let list;
+    let name;
+    let placeholder;
+
+    if (type === "allergy") {
+
+        list = document.getElementById(
+            "allergy-list"
+        );
+
+        name = "custom_allergy";
+
+        placeholder = "Enter another allergy...";
+
+    }
+
+    else {
+
+        list = document.getElementById(
+            "dietary-list"
+        );
+
+        name = "custom_dietary_tag";
+
+        placeholder = "Enter another dietary preference...";
+
+    }
+
+
+    const row = document.createElement("div");
+
+    row.className = "custom-row";
+
+
+    const input = document.createElement("input");
+
+    input.type = "text";
+
+    input.name = name;
+
+    input.placeholder = placeholder;
+
+
+    const button = document.createElement("button");
+
+    button.type = "button";
+
+    button.className = "add-button";
+
+    button.innerHTML = "＋";
+
+    button.onclick = function() {
+
+        addCustom(type);
+
+    };
+
+
+    row.appendChild(input);
+
+    row.appendChild(button);
+
+    list.appendChild(row);
+
+}
+
+</script>
 
 </body>
 </html>
+```

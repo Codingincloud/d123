@@ -2621,7 +2621,6 @@ body {
         text-align: center;
     }
 }
-<<<<<<< HEAD
 
 
 
@@ -2747,5 +2746,263 @@ body {
     }
 
 }
-=======
->>>>>>> 440291af6aea3fcccb6c5093a15d0f90ac577d88
+
+
+
+
+
+/* =========================================
+   ENERGY OVERVIEW
+========================================= */
+
+.energy-section {
+    margin-top: 70px;
+}
+
+.energy-header {
+    margin-bottom: 14px;
+}
+
+.energy-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.energy-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #777;
+}
+
+.energy-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.energy-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.energy-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #f5f9ef;
+    font-size: 23px;
+    flex-shrink: 0;
+}
+
+.energy-card span {
+    font-size: 13px;
+    color: #777;
+    font-weight: 600;
+}
+
+.energy-card h2 {
+    margin: 3px 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.energy-card h2 small {
+    font-size: 13px;
+    font-weight: 500;
+    color: #777;
+}
+
+.energy-card p {
+    margin: 0;
+    font-size: 12px;
+    color: #888;
+}
+
+@media (max-width: 600px) {
+    .energy-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+/* =========================================
+   PROFILE SETUP
+========================================= */
+
+.profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+.profile-container h1 {
+    margin: 0 0 30px;
+    font-size: 28px;
+}
+
+.profile-container .form-group {
+    margin-bottom: 22px;
+}
+
+.profile-container .form-group > label,
+.profile-container .section-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.profile-container input[type="date"],
+.profile-container input[type="number"],
+.profile-container input[type="text"],
+.profile-container select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #dcdcdc;
+    border-radius: 9px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.profile-container input:focus,
+.profile-container select:focus {
+    outline: none;
+    border-color: #8bc34a;
+    box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.12);
+}
+
+
+/* CHECKBOXES */
+
+.choice-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.choice {
+    display: flex !important;
+    align-items: center;
+    gap: 7px;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 9px 13px;
+    border: 1px solid #dedede;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500 !important;
+    background: #ffffff;
+}
+
+.choice:hover {
+    border-color: #8bc34a;
+    background: #f7fcef;
+}
+
+.choice input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+
+/* OTHER */
+
+.other-button {
+    margin-top: 12px;
+    padding: 9px 14px;
+    border: 1px dashed #999;
+    border-radius: 9px;
+    background: #ffffff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.other-button:hover {
+    border-color: #8bc34a;
+    color: #6a9d35;
+    background: #f7fcef;
+}
+
+
+/* CUSTOM ENTRIES */
+
+.custom-container {
+    display: none;
+    margin-top: 12px;
+}
+
+.custom-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.custom-row input {
+    flex: 1;
+}
+
+.add-button {
+    width: 42px;
+    border: none;
+    border-radius: 9px;
+    background: #8bc34a;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background: #76ad38;
+}
+
+
+/* SAVE */
+
+.profile-container .save-button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 10px;
+    background: #8bc34a;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile-container .save-button:hover {
+    background: #76ad38;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .profile-container {
+        margin: 20px auto;
+        padding: 25px 20px;
+    }
+
+    .profile-container h1 {
+        font-size: 24px;
+    }
+
+}

@@ -23,7 +23,26 @@ class UserProfile(models.Model):
         ('gain', 'Gain Weight'),
     ]
 
+    custom_allergies = models.TextField(
+        blank=True,
+        default=""
+    )
 
+    custom_dietary_tags = models.TextField(
+        blank=True,
+        default=""
+    )
+    allergies = models.ManyToManyField(
+    "Allergen",
+    blank=True,
+    related_name="users"
+    )
+
+    dietary_tags = models.ManyToManyField(
+        "DietaryTag",
+        blank=True,
+        related_name="users"
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     date_of_birth = models.DateField(null=True, blank=True)
