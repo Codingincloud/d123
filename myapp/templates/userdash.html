@@ -148,9 +148,10 @@
                 </div>
 
                 <h3>
-                    Update Profile
+                    <a href="{% url 'edit_profile' %}">
+                        Edit Profile
+                    </a>
                 </h3>
-
                 <p>
                     Manage your nutrition preferences.
                 </p>
@@ -163,7 +164,7 @@
 
 
 <!-- ==================================================
-     DAILY LOGGING (PURE CSS MODALS - NO JS)
+     DAILY LOGGING 
 ================================================== -->
 <section class="daily-logging">
 
@@ -233,6 +234,9 @@
                     <span class="modal-badge food-bg">🍽 Food</span>
                     <h2>Log Your Food</h2>
                 </div>
+
+            <form method="POST" action="">
+                   {% csrf_token %}
             
                 <div class="form-fields-wrapper">
             
@@ -247,12 +251,14 @@
                             required
                         >
                     </p>
+    
             
-                    <button type="submit" class="modal-submit-btn food-btn">
+                    <button type="submit" name="meal_submit" value="1" class="modal-submit-btn food-btn">
                         Log Food
                     </button>
             
                 </div>
+            </form>
             
             </div>
 
@@ -352,7 +358,11 @@
                                 <div>
 
                                     <strong>
-                                        {{ meal.food.name }}
+                                        {% if meal.food %}
+                                          {{ meal.food.name }}
+                                        {% else %}
+                                          {{ meal.food_name }}
+                                        {% endif %}
                                     </strong>
 
                                     <span>

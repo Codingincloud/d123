@@ -1,17 +1,3 @@
-# from django.urls import path
-# from . import views
-# urlpatterns = [
-#     path("", views.index, name="index"),
-#     path("index/", views.index, name="index"),
-#     path("about/", views.about, name="about"),
-#     path("home/", views.home, name="home"),
-#     path("contact/", views.contact, name="contact"),
-#     path("register/", views.register, name="register"),
-#     path("login/", views.user_login, name="login"),
-#     path("logout/", views.user_logout, name="logout"),
-#     path("userdash/",views.userdash, name="userdash")
-
-# ]
 
 
 
@@ -43,5 +29,7 @@ urlpatterns = [
     path('log-water/', views.log_water, name='log_water'),
     path('log-weight/', views.log_weight, name='log_weight'),
     path('chatbot/', views.chatbot, name='chatbot'),
+    path("profile/edit/",views.edit_profile,name="edit_profile"),
+    path("profile/", views.profile, name="profile"),
 
 ]   

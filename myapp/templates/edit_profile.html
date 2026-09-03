@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="edit-profile-page">
+
+    <div class="edit-profile-card">
+
+        <div class="edit-profile-header">
+            <div class="profile-icon">👤</div>
+
+            <h1>Edit Profile</h1>
+
+            <p>
+                Update your personal information and nutrition preferences.
+            </p>
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-section">
+
+                <h2>Personal Information</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>First Name</label>
+                        {{ user_form.first_name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        {{ user_form.last_name }}
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Email</label>
+                        {{ user_form.email }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-section">
+
+                <h2>Nutrition Profile</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        {{ profile_form.gender }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Height</label>
+                        {{ profile_form.height }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Weight</label>
+                        {{ profile_form.weight }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Activity Level</label>
+                        {{ profile_form.activity_level }}
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Goal</label>
+                        {{ profile_form.goal }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a href="{% url 'userdash' %}" class="cancel-btn">
+                    Cancel
+                </a>
+
+                <button type="submit" class="save-btn">
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

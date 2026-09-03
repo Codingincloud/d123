@@ -111,9 +111,15 @@ class MealLog(models.Model):
     )
 
     food = models.ForeignKey(
-        Food,
-        on_delete=models.CASCADE,
-        related_name="meal_logs"
+    Food,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name="meal_logs"
+    )
+
+    food_name = models.CharField(
+       max_length=200
     )
 
     meal_type = models.CharField(
@@ -128,7 +134,7 @@ class MealLog(models.Model):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.food.name}"
+        return f"{self.user.username} - {self.food_name}"
     
 class WaterLog(models.Model):
     user = models.ForeignKey(
