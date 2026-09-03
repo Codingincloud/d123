@@ -127,6 +127,11 @@
     {% block content %}
     {% endblock %}
 
+    {% if user.is_authenticated %}
+    <a href="{% url 'chatbot' %}" class="chatbot-button" aria-label="Open NutriAI chatbot">
+        Chat
+    </a>
+    {% endif %}
  
 
     <footer class="footer">

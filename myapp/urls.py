@@ -28,8 +28,8 @@ urlpatterns = [
     path('log-meal/', views.log_meal, name='log_meal'),
     path('log-water/', views.log_water, name='log_water'),
     path('log-weight/', views.log_weight, name='log_weight'),
+    path('chatbot/', views.chatbot, name='chatbot'),
     path("profile/edit/",views.edit_profile,name="edit_profile"),
     path("profile/", views.profile, name="profile"),
-    path("profile/edit/", views.edit_profile, name="edit_profile"),
 
 ]   

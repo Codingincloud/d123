@@ -1,0 +1,287 @@
+NUTRIAI – AI CHATBOT SETUP GUIDE
+================================
+
+This guide explains how each team member can run the AI chatbot locally
+using their OWN Groq API key.
+
+IMPORTANT SECURITY RULE
+-----------------------
+NEVER put your real API key directly into Python/JavaScript source code.
+NEVER commit the .env file to GitHub.
+Each developer should create and use their own API key locally.
+
+1. GET THE PROJECT
+------------------
+Make sure you have the latest project code:
+
+    git checkout ai-chatbot-hybrid-rag
+    git pull
+
+If you are setting this up after the feature is merged into main:
+
+    git checkout main
+    git pull
+
+
+2. ACTIVATE THE VIRTUAL ENVIRONMENT
+-----------------------------------
+From the NutriAI project folder:
+
+Windows PowerShell:
+    .\venv\Scripts\Activate.ps1
+
+Windows CMD:
+    venv\Scripts\activate
+
+Mac/Linux:
+    source venv/bin/activate
+
+If your project uses a different virtual-environment name/path,
+activate that environment instead.
+
+
+3. INSTALL THE REQUIRED PYTHON PACKAGES
+----------------------------------------
+First install the project's normal dependencies:
+
+    pip install -r requirements.txt
+
+If the Groq package is not already included in requirements.txt:
+
+    pip install groq
+
+Do NOT install packages globally if the project is intended to use
+the virtual environment.
+
+
+4. CREATE YOUR OWN GROQ API KEY
+--------------------------------
+1. Go to the Groq Console:
+   https://console.groq.com/
+
+2. Sign in/create your own Groq account.
+
+3. Open the API Keys section.
+
+4. Create a new API key.
+
+5. Copy the key immediately and keep it private.
+
+DO NOT send the key to teammates in chat and DO NOT put it in GitHub.
+
+Groq recommends using an environment variable for the API key instead
+of hardcoding it in source code.
+
+
+5. CREATE YOUR LOCAL .env FILE
+------------------------------
+In the ROOT folder of the NutriAI project, create a file named:
+
+    .env
+
+Example:
+
+    GROQ_API_KEY=your_own_groq_api_key_here
+
+Replace the example value with YOUR actual key.
+
+IMPORTANT:
+- Do not include quotation marks unless the project's existing .env
+  convention requires them.
+- Do not add spaces around '='.
+- Do not share this file.
+- Do not commit this file.
+
+
+6. CHECK .gitignore
+-------------------
+The project should have .env listed in .gitignore.
+
+It should contain something similar to:
+
+    .env
+
+If .env is already ignored, leave it as it is.
+
+You can check whether Git is ignoring it with:
+
+    git status
+
+Your .env file should NOT appear as an untracked file.
+
+If Git is already tracking .env, STOP before pushing and tell the
+project maintainer. Simply adding .env to .gitignore does not remove
+a file that Git is already tracking.
+
+
+7. DJANGO / ENVIRONMENT LOADING
+-------------------------------
+The project should load the .env file from the backend.
+
+If the project uses python-dotenv, the code will generally contain
+something similar to:
+
+    from dotenv import load_dotenv
+    load_dotenv()
+
+Then the API key can be accessed with:
+
+    import os
+    api_key = os.getenv("GROQ_API_KEY")
+
+The exact code may differ depending on the current NutriAI implementation.
+Do not create a second API-key system if one already exists in the project.
+
+
+8. RUN DJANGO CHECKS
+--------------------
+After setting up your environment:
+
+    python manage.py check
+
+If the project has database changes:
+
+    python manage.py migrate
+
+
+9. RUN THE PROJECT
+------------------
+Start the Django development server:
+
+    python manage.py runserver
+
+Open the local NutriAI website in your browser and test the chatbot.
+
+Test at least:
+- The chatbot page opens.
+- A normal question receives an answer.
+- The API key is being loaded correctly.
+- Tool-calling features work if enabled.
+- RAG/retrieval features work if enabled.
+
+
+10. IF YOU GET "API KEY NOT FOUND"
+----------------------------------
+Check the following:
+
+1. The file is named exactly:
+       .env
+
+2. It is in the correct project root.
+
+3. It contains:
+       GROQ_API_KEY=your_key
+
+4. You activated the correct virtual environment.
+
+5. The Django code actually loads the .env file.
+
+6. Restart the Django development server after changing .env.
+
+7. Make sure there is no typo in GROQ_API_KEY.
+
+
+11. IF THE CHATBOT SAYS THE API KEY IS INVALID
+----------------------------------------------
+Create a new key in your own Groq account or verify that you copied
+the key correctly.
+
+Do not ask another teammate for their API key.
+
+If you believe a key has been exposed publicly, revoke/rotate it
+through the Groq Console.
+
+
+12. IMPORTANT FOR GIT
+---------------------
+DO COMMIT:
+- Python source code
+- HTML/CSS/JS source code
+- requirements.txt
+- migration files when appropriate
+- .gitignore
+
+DO NOT COMMIT:
+- .env
+- API keys
+- passwords
+- database credentials
+- other private secrets
+
+
+13. TEAM WORKFLOW
+-----------------
+Every developer should have their own local .env file and their own
+Groq API key.
+
+Example:
+
+Developer A:
+    .env -> GROQ_API_KEY=KEY_A
+
+Developer B:
+    .env -> GROQ_API_KEY=KEY_B
+
+Developer C:
+    .env -> GROQ_API_KEY=KEY_C
+
+All of them can use the same Git repository/code without sharing
+their secret keys.
+
+The .env files remain local and are intentionally excluded from Git.
+
+
+14. BEFORE PUSHING YOUR CODE
+----------------------------
+Run:
+
+    git status
+
+Make sure .env is NOT listed.
+
+Then:
+
+    git add .
+    git commit -m "Update AI chatbot"
+    git push
+
+Never use:
+
+    git add .env
+
+and never paste your API key into a GitHub issue, Pull Request,
+commit message, screenshot, or source file.
+
+
+15. OPTIONAL: QUICK API TEST
+----------------------------
+If the project's implementation uses the Groq Python SDK, a simple
+environment-variable check can be performed without printing the key:
+
+    python -c "import os; print('GROQ_API_KEY loaded:', bool(os.getenv('GROQ_API_KEY')))"
+
+If it prints:
+
+    GROQ_API_KEY loaded: True
+
+the environment variable is available to that shell.
+
+Do NOT print the actual API key.
+
+
+REFERENCE
+---------
+Groq Quickstart:
+https://console.groq.com/docs/quickstart
+
+Groq Security Guidance:
+https://console.groq.com/docs/production-readiness/security-onboarding
+
+The URLs above are official Groq documentation.
+
+FINAL REMINDER
+--------------
+Your API key belongs only to you.
+Do not share it with teammates.
+Do not commit it to GitHub.
+Each teammate should create their own key and local .env file.
