@@ -6,8 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserEditForm, ProfileEditForm
 
-from .services.calculations import calculate_nutrition_baseline
+from .services.calculations import (
+    calculate_nutrition_baseline,
+    calculate_daily_targets,
+    calculate_daily_summary,
+)
 from .services.chatbot import ChatbotConfigurationError, ChatbotError, get_chatbot_reply
+from .ml.recommender import get_recommendations
 
 from .models import (
     UserProfile,
@@ -18,7 +23,8 @@ from .models import (
     MealLog,
     WaterLog,
     WeightLog,
-    FoodVariant
+    FoodVariant,
+    RecommendationHistory,
 )
 
 from .forms import (
@@ -429,6 +435,49 @@ def userdash(request):
 
 
     # --------------------------
+    # LOG RECOMMENDED FOOD
+    # --------------------------
+    elif request.method == "POST" and "log_recommendation" in request.POST:
+        rec_food_id = request.POST.get("recommended_food_id")
+        meal_type = request.POST.get("meal_type", "lunch")
+        try:
+            food_item = Food.objects.get(id=rec_food_id)
+            display_name = food_item.name
+            if food_item.name_nepali:
+                display_name = f"{food_item.name} ({food_item.name_nepali})"
+
+            MealLog.objects.create(
+                user=request.user,
+                food=food_item,
+                food_name=display_name,
+                meal_type=meal_type,
+                quantity=1,
+                calories=food_item.calories,
+                protein=food_item.protein,
+                carbohydrates=food_item.carbohydrates,
+                fat=food_item.fat,
+                fiber=food_item.fiber,
+                consumed_at=timezone.now(),
+                notes="Logged from AI recommendations"
+            )
+
+            # Mark recommendation as eaten to update behavioral learning
+            RecommendationHistory.objects.filter(
+                user=request.user,
+                food=food_item
+            ).update(is_eaten=True)
+
+            messages.success(
+                request,
+                f"Logged {display_name} to today's {meal_type}!"
+            )
+            return redirect("userdash")
+
+        except Food.DoesNotExist:
+            messages.error(request, "Selected food item was not found.")
+            return redirect("userdash")
+
+    # --------------------------
     # RECENT ACTIVITY
     # --------------------------
 
@@ -437,37 +486,20 @@ def userdash(request):
     ).order_by(
         "-consumed_at"
     )[:5]
-        # =========================================
-    # TODAY'S NUTRITION TOTALS
+
     # =========================================
+    # TODAY'S NUTRITION & SUMMARY
+    # =========================================
+    daily_summary = calculate_daily_summary(request.user, profile)
+    daily_targets = daily_summary["targets"]
 
-    today = timezone.localdate()
-
-    today_meals = MealLog.objects.filter(
-        user=request.user,
-        consumed_at__date=today
-    )
-
-    today_calories = sum(
-        meal.calories for meal in today_meals
-    )
-
-    today_protein = sum(
-        meal.protein for meal in today_meals
-    )
-
-    today_carbohydrates = sum(
-        meal.carbohydrates for meal in today_meals
-    )
-
-    today_fat = sum(
-        meal.fat for meal in today_meals
-    )
-
-    today_fiber = sum(
-        meal.fiber for meal in today_meals
-    )
-
+    # Generate ML-powered recommendations tailored to today's remaining budget
+    recommendations = []
+    if profile:
+        try:
+            recommendations = get_recommendations(request.user, limit=4)
+        except Exception:
+            recommendations = []
 
     recent_water = WaterLog.objects.filter(
         user=request.user
@@ -475,13 +507,12 @@ def userdash(request):
         "-consumed_at"
     )[:5]
 
-
     recent_weight = WeightLog.objects.filter(
         user=request.user
     ).order_by(
         "-recorded_at"
     )[:5]
-    
+
     custom_foods = MealLog.objects.filter(
         user=request.user,
         food__isnull=True
@@ -492,41 +523,37 @@ def userdash(request):
     # --------------------------
 
     context = {
-
         "meal_form": meal_form,
-
         "water_form": water_form,
-
         "weight_form": weight_form,
-
         "recent_meals": recent_meals,
-
         "recent_water": recent_water,
-
         "recent_weight": recent_weight,
-        
         "foods": Food.objects.prefetch_related("variants"),
-            
         "custom_foods": custom_foods,
-        
-        "today_calories": today_calories,
-        
-        "today_protein": today_protein,
-        
-        "today_carbohydrates": today_carbohydrates,
-        
-        "today_fat": today_fat,
-        
-        "today_fiber": today_fiber,
-
         "profile": profile,
-        
         "baseline": baseline,
-        
         "bmr": baseline["bmr"] if baseline else None,
-        
         "tdee": baseline["tdee"] if baseline else None,
-
+        # Summary & Targets
+        "summary": daily_summary,
+        "targets": daily_targets,
+        "today_calories": daily_summary["consumed_calories"],
+        "today_protein": daily_summary["consumed_protein"],
+        "today_carbohydrates": daily_summary["consumed_carbohydrates"],
+        "today_fat": daily_summary["consumed_fat"],
+        "today_fiber": daily_summary["consumed_fiber"],
+        "today_water": daily_summary["consumed_water"],
+        "remaining_calories": daily_summary["remaining_calories"],
+        "remaining_protein": daily_summary["remaining_protein"],
+        "remaining_carbohydrates": daily_summary["remaining_carbohydrates"],
+        "remaining_fat": daily_summary["remaining_fat"],
+        "over_budget": daily_summary["over_budget"],
+        "pct_calories": daily_summary["pct_calories"],
+        "pct_protein": daily_summary["pct_protein"],
+        "pct_carbohydrates": daily_summary["pct_carbohydrates"],
+        "pct_fat": daily_summary["pct_fat"],
+        "recommendations": recommendations,
     }
 
 
