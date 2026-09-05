@@ -28,103 +28,149 @@
          NUTRITION SUMMARY
     ========================== -->
 
+    <!-- ==========================
+         NUTRITION SUMMARY
+    ========================== -->
+
     <div class="dashboard-cards">
 
         <div class="dashboard-card">
-
-            <div class="card-icon">
-                🔥
-            </div>
-
-            <h3>
-                Daily Calories
-            </h3>
-
-            <h2>
-                {{ today_calories|floatformat:0 }} kcal
-            </h2>
-
+            <div class="card-icon">🔥</div>
+            <h3>Daily Calories</h3>
+            <h2>{{ today_calories|floatformat:0 }} <small style="font-size: 0.9rem; color: #777;">/ {{ targets.calorie_target }} kcal</small></h2>
             <p>
-                Consumed today
+                {% if over_budget %}
+                    <span style="color: #e53935; font-weight: 600;">⚠️ Over budget</span>
+                {% else %}
+                    <span style="color: #2e7d32; font-weight: 600;">{{ remaining_calories|floatformat:0 }} kcal remaining</span>
+                {% endif %}
             </p>
-
         </div>
 
-
         <div class="dashboard-card">
-
-            <div class="card-icon">
-                💪
-            </div>
-
-            <h2>
-                {{ today_protein|floatformat:1 }}g
-            </h2>
-            
-            <p>
-                Protein consumed today
-            </p>
-
+            <div class="card-icon">💪</div>
+            <h3>Daily Protein</h3>
+            <h2>{{ today_protein|floatformat:1 }} <small style="font-size: 0.9rem; color: #777;">/ {{ targets.target_protein }}g</small></h2>
+            <p>{{ remaining_protein|floatformat:1 }}g remaining</p>
         </div>
 
+        <div class="dashboard-card">
+            <div class="card-icon">💧</div>
+            <h3>Hydration</h3>
+            <h2>{{ today_water }} <small style="font-size: 0.9rem; color: #777;">/ {{ targets.target_water }} ml</small></h2>
+            <p>Daily water intake</p>
+        </div>
 
         <div class="dashboard-card">
-
-            <div class="card-icon">
-                ⚖️
-            </div>
-
-            <h3>
-                Current Goal
-            </h3>
-            
-            <h2>
-                {{ profile.get_goal_display }}
-            </h2>
-            
-            <p>
-                Your nutrition goal
-            </p>
-
+            <div class="card-icon">⚖️</div>
+            <h3>Current Goal</h3>
+            <h2>{{ profile.get_goal_display }}</h2>
+            <p>{{ profile.weight }} kg &bull; {{ profile.height }} cm</p>
         </div>
 
     </div>
-    
-    
+
+    <!-- ==================================================
+         MACRO PROGRESS BREAKDOWN (Dristi Shrestha)
+    ================================================== -->
+    <section class="macro-breakdown-section">
+        <div class="macro-breakdown-header">
+            <h3>📊 Today's Macronutrient Progress</h3>
+            <span style="font-size: 0.9rem; color: #666;">Target Budget: <strong>{{ targets.calorie_target }} kcal</strong></span>
+        </div>
+
+        <div class="macro-grid">
+            <div class="macro-bar-card">
+                <div class="macro-bar-label">
+                    <span>🔥 Calories</span>
+                    <span>{{ pct_calories }}%</span>
+                </div>
+                <div class="macro-bar-track">
+                    <div class="macro-bar-fill fill-calories" style="width: {{ pct_calories }}%;"></div>
+                </div>
+                <div class="macro-bar-sub">
+                    <span>{{ today_calories|floatformat:0 }} kcal</span>
+                    <span>Target: {{ targets.calorie_target }} kcal</span>
+                </div>
+            </div>
+
+            <div class="macro-bar-card">
+                <div class="macro-bar-label">
+                    <span>🍗 Protein</span>
+                    <span>{{ pct_protein }}%</span>
+                </div>
+                <div class="macro-bar-track">
+                    <div class="macro-bar-fill fill-protein" style="width: {{ pct_protein }}%;"></div>
+                </div>
+                <div class="macro-bar-sub">
+                    <span>{{ today_protein|floatformat:1 }}g</span>
+                    <span>Target: {{ targets.target_protein }}g</span>
+                </div>
+            </div>
+
+            <div class="macro-bar-card">
+                <div class="macro-bar-label">
+                    <span>🍚 Carbohydrates</span>
+                    <span>{{ pct_carbohydrates }}%</span>
+                </div>
+                <div class="macro-bar-track">
+                    <div class="macro-bar-fill fill-carbs" style="width: {{ pct_carbohydrates }}%;"></div>
+                </div>
+                <div class="macro-bar-sub">
+                    <span>{{ today_carbohydrates|floatformat:1 }}g</span>
+                    <span>Target: {{ targets.target_carbohydrates }}g</span>
+                </div>
+            </div>
+
+            <div class="macro-bar-card">
+                <div class="macro-bar-label">
+                    <span>🥑 Healthy Fats</span>
+                    <span>{{ pct_fat }}%</span>
+                </div>
+                <div class="macro-bar-track">
+                    <div class="macro-bar-fill fill-fat" style="width: {{ pct_fat }}%;"></div>
+                </div>
+                <div class="macro-bar-sub">
+                    <span>{{ today_fat|floatformat:1 }}g</span>
+                    <span>Target: {{ targets.target_fat }}g</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================
+         ENERGY OVERVIEW
+    ========================== -->
     <div class="energy-section">
 
         <div class="energy-header">
             <h3>Energy Overview</h3>
-            <p>Your estimated daily energy needs</p>
+            <p>Calculated via Mifflin-St Jeor equation</p>
         </div>
 
         <div class="energy-cards">
 
             <div class="energy-card">
                 <div class="energy-icon">🔥</div>
-
                 <div>
                     <span>BMR</span>
                     <h2>{{ bmr }} <small>kcal</small></h2>
-                    <p>Calories burned at rest</p>
+                    <p>Basal Metabolic Rate at rest</p>
                 </div>
             </div>
 
-
             <div class="energy-card">
                 <div class="energy-icon">⚡</div>
-
                 <div>
                     <span>TDEE</span>
                     <h2>{{ tdee }} <small>kcal</small></h2>
-                    <p>Estimated daily energy expenditure</p>
+                    <p>Total Daily Energy Expenditure</p>
                 </div>
             </div>
 
         </div>
 
     </div>
-
 
     <!-- ==========================
          QUICK ACTIONS
@@ -132,66 +178,97 @@
 
     <section class="dashboard-actions">
 
-        <h2>
-            Quick Actions
-        </h2>
+        <h2>Quick Actions</h2>
 
         <div class="action-grid">
 
-            <div class="action-card">
-
-                <div class="quick-icon">
-                    🥗
+            <a href="#ai-recommendations" style="text-decoration: none; color: inherit;">
+                <div class="action-card">
+                    <div class="quick-icon">🥗</div>
+                    <h3>AI Recommendations</h3>
+                    <p>XGBoost meal suggestions.</p>
                 </div>
-
-                <h3>
-                    Generate Meal Plan
-                </h3>
-
-                <p>
-                    Get AI-powered meal suggestions.
-                </p>
-
-            </div>
-
+            </a>
 
             <div class="action-card">
-
-                <div class="quick-icon">
-                    📊
-                </div>
-
-                <h3>
-                    Track Calories
-                </h3>
-
-                <p>
-                    Monitor your daily food intake.
-                </p>
-
+                <div class="quick-icon">📊</div>
+                <h3>Track Calories</h3>
+                <p>Monitor your daily food intake.</p>
             </div>
 
-
-            <div class="action-card">
-
-                <div class="quick-icon">
-                    👤
+            <a href="{% url 'edit_profile' %}" style="text-decoration: none; color: inherit;">
+                <div class="action-card">
+                    <div class="quick-icon">👤</div>
+                    <h3>Edit Profile</h3>
+                    <p>Manage your health preferences.</p>
                 </div>
-
-                <h3>
-                    <a href="{% url 'edit_profile' %}">
-                        Edit Profile
-                    </a>
-                </h3>
-
-                <p>
-                    Manage your nutrition preferences.
-                </p>
-
-            </div>
+            </a>
 
         </div>
 
+    </section>
+
+    <!-- ==================================================
+         AI PERSONALIZED MEAL RECOMMENDATIONS (Romina & Dristi)
+    ================================================== -->
+    <section class="ai-recommendations-section" id="ai-recommendations">
+        <div class="rec-section-header">
+            <h2>🤖 AI Personalized Nepali Meal Recommendations</h2>
+            <p>
+                Ranked by our <strong>XGBoost Model (trained on NepaliNutriDB)</strong> based on your 
+                <strong>{{ profile.get_goal_display }}</strong> goal and remaining 
+                <strong>{{ remaining_calories|floatformat:0 }} kcal</strong> budget.
+            </p>
+        </div>
+
+        {% if recommendations %}
+            <div class="rec-grid">
+                {% for item in recommendations %}
+                    <div class="rec-card">
+                        <div class="rec-top">
+                            <div class="rec-title-wrap">
+                                <h4>{{ item.food.name }}</h4>
+                                {% if item.food.name_nepali %}
+                                    <span class="rec-nepali-name">{{ item.food.name_nepali }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="rec-match-badge">{{ item.match_pct }}% Match</span>
+                        </div>
+
+                        <div class="rec-macros">
+                            <span class="rec-macro-pill">🔥 {{ item.food.calories|floatformat:0 }} kcal</span>
+                            <span class="rec-macro-pill">🍗 {{ item.food.protein|floatformat:1 }}g P</span>
+                            <span class="rec-macro-pill">🍚 {{ item.food.carbohydrates|floatformat:1 }}g C</span>
+                            <span class="rec-macro-pill">🥑 {{ item.food.fat|floatformat:1 }}g F</span>
+                        </div>
+
+                        <div class="rec-badges">
+                            {% for reason in item.reasons %}
+                                <span class="rec-tag">{{ reason }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <form method="post" class="rec-log-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="recommended_food_id" value="{{ item.food.id }}">
+                            <select name="meal_type" class="rec-meal-select" title="Select meal type">
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="snack">Snack</option>
+                            </select>
+                            <button type="submit" name="log_recommendation" value="1" class="rec-log-btn">
+                                🍽️ Log Meal
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: #666; font-style: italic;">
+                No recommendations currently available. Ensure your user profile has weight and goals completed.
+            </p>
+        {% endif %}
     </section>
 
 

@@ -3006,3 +3006,233 @@ body {
     }
 
 }
+
+
+/* =========================================================
+   MACRO PROGRESS BREAKDOWN & AI RECOMMENDATIONS
+   (Authored by: Dristi Shrestha - Frontend Lead)
+========================================================= */
+
+.macro-breakdown-section {
+    margin: 30px 0;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eef2ed;
+}
+
+.macro-breakdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.macro-breakdown-header h3 {
+    font-size: 1.3rem;
+    color: #2E7D32;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.macro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.macro-bar-card {
+    background: #fbfdfa;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e8f0e5;
+}
+
+.macro-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.macro-bar-track {
+    width: 100%;
+    height: 10px;
+    background: #e2e8df;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.macro-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.fill-calories { background: linear-gradient(90deg, #ff9800, #f57c00); }
+.fill-protein { background: linear-gradient(90deg, #2196f3, #1976d2); }
+.fill-carbs { background: linear-gradient(90deg, #4caf50, #388e3c); }
+.fill-fat { background: linear-gradient(90deg, #e91e63, #c2185b); }
+
+.macro-bar-sub {
+    font-size: 0.8rem;
+    color: #777;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* AI RECOMMENDATIONS SECTION */
+.ai-recommendations-section {
+    margin: 35px 0;
+    padding: 26px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 22px rgba(46, 125, 50, 0.08);
+    border: 1px solid #dceed9;
+}
+
+.rec-section-header {
+    margin-bottom: 22px;
+}
+
+.rec-section-header h2 {
+    font-size: 1.5rem;
+    color: #1b5e20;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rec-section-header p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-top: 4px;
+}
+
+.rec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.rec-card {
+    background: #ffffff;
+    border: 1px solid #e1efe0;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+}
+
+.rec-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.rec-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.rec-title-wrap h4 {
+    font-size: 1.15rem;
+    color: #222;
+    margin-bottom: 3px;
+}
+
+.rec-nepali-name {
+    display: inline-block;
+    color: #2E7D32;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.rec-match-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid #c8e6c9;
+}
+
+.rec-macros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.rec-macro-pill {
+    background: #f4f7f4;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.rec-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.rec-tag {
+    background: #eef7ed;
+    color: #388e3c;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.rec-log-form {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.rec-meal-select {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: #fafafa;
+    color: #333;
+}
+
+.rec-log-btn {
+    flex: 1;
+    background: #2E7D32;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.rec-log-btn:hover {
+    background: #236326;
+}
