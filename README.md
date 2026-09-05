@@ -135,8 +135,8 @@ NutriAI includes pre-configured personas to demonstrate distinct real-world beha
 
 ### 2. Clone and Setup Environment
 ```bash
-git clone https://github.com/dristi-stha/NutriAI.git
-cd NutriAI
+git clone https://github.com/Codingincloud/d123.git
+cd d123
 
 python -m venv venv
 # Windows:
