@@ -95,12 +95,34 @@
 
                 <div class="profile-item">
                     <span>Activity Level</span>
-                    <strong>{{ profile.activity_level|default:"Not provided" }}</strong>
+                    <strong>{{ profile.get_activity_level_display|default:profile.activity_level|default:"Not provided"|title }}</strong>
                 </div>
 
                 <div class="profile-item">
                     <span>Goal</span>
-                    <strong>{{ profile.goal|default:"Not provided" }}</strong>
+                    <strong>{{ profile.get_goal_display|default:profile.goal|default:"Not provided"|title }}</strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>BMR (Mifflin-St Jeor)</span>
+                    <strong>
+                        {% if baseline.bmr %}
+                            {{ baseline.bmr }} kcal
+                        {% else %}
+                            Not calculated
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <span>TDEE (Energy Expenditure)</span>
+                    <strong>
+                        {% if baseline.tdee %}
+                            {{ baseline.tdee }} kcal
+                        {% else %}
+                            Not calculated
+                        {% endif %}
+                    </strong>
                 </div>
 
                 <div class="profile-item calorie-item">
@@ -108,8 +130,42 @@
                     <strong>
                         {% if profile.daily_calorie_target %}
                             {{ profile.daily_calorie_target }} kcal
+                        {% elif targets.calorie_target %}
+                            {{ targets.calorie_target }} kcal
                         {% else %}
                             Not calculated
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="profile-item full-width">
+                    <span>Dietary Preferences</span>
+                    <strong>
+                        {% if profile.dietary_tags.all %}
+                            {% for tag in profile.dietary_tags.all %}
+                                <span class="badge" style="background:#e8f5e9;color:#2e7d32;padding:3px 8px;border-radius:12px;font-size:12px;margin-right:4px;">{{ tag.name }}</span>
+                            {% endfor %}
+                        {% else %}
+                            None specified
+                        {% endif %}
+                        {% if profile.custom_dietary_tags %}
+                            <em>({{ profile.custom_dietary_tags }})</em>
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="profile-item full-width">
+                    <span>Allergens & Exclusions</span>
+                    <strong>
+                        {% if profile.allergies.all %}
+                            {% for alg in profile.allergies.all %}
+                                <span class="badge" style="background:#ffebee;color:#c62828;padding:3px 8px;border-radius:12px;font-size:12px;margin-right:4px;">⚠️ {{ alg.name }}</span>
+                            {% endfor %}
+                        {% else %}
+                            None
+                        {% endif %}
+                        {% if profile.custom_allergies %}
+                            <em>({{ profile.custom_allergies }})</em>
                         {% endif %}
                     </strong>
                 </div>
