@@ -42,9 +42,9 @@ class UserProfileForm(forms.ModelForm):
             "gender": forms.Select(
                 choices=[
                     ("", "Select Gender"),
-                    ("Male", "Male"),
-                    ("Female", "Female"),
-                    ("Other", "Other"),
+                    ("male", "Male"),
+                    ("female", "Female"),
+                    ("other", "Other"),
                 ],
                 attrs={"class": "form-control"}
             ),
@@ -65,19 +65,19 @@ class UserProfileForm(forms.ModelForm):
             "activity_level": forms.Select(
                 choices=[
                     ("", "Select Activity Level"),
-                    ("Sedentary", "Sedentary"),
-                    ("Light", "Lightly Active"),
-                    ("Moderate", "Moderately Active"),
-                    ("Active", "Very Active"),
+                    ("sedentary", "Sedentary (little or no exercise)"),
+                    ("light", "Lightly Active (light exercise 1-3 days/wk)"),
+                    ("moderate", "Moderately Active (moderate exercise 3-5 days/wk)"),
+                    ("very", "Very Active (hard exercise 6-7 days/wk)"),
                 ],
                 attrs={"class": "form-control"}
             ),
             "goal": forms.Select(
                 choices=[
                     ("", "Select Goal"),
-                    ("Lose", "Lose Weight"),
-                    ("Maintain", "Maintain Weight"),
-                    ("Gain", "Gain Weight"),
+                    ("lose", "Lose Weight (-500 kcal deficit)"),
+                    ("maintain", "Maintain Weight"),
+                    ("gain", "Gain Weight (+500 kcal surplus)"),
                 ],
                 attrs={"class": "form-control"}
             ),
@@ -189,8 +189,12 @@ class WaterLogForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["consumed_at"].required = False
         if not self.instance.pk:
             self.fields["consumed_at"].initial = timezone.now().strftime("%Y-%m-%dT%H:%M")
+
+    def clean_consumed_at(self):
+        return self.cleaned_data.get("consumed_at") or timezone.now()
 
 
 class WeightLogForm(forms.ModelForm):
@@ -208,8 +212,12 @@ class WeightLogForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["recorded_at"].required = False
         if not self.instance.pk:
             self.fields["recorded_at"].initial = timezone.now().strftime("%Y-%m-%dT%H:%M")
+
+    def clean_recorded_at(self):
+        return self.cleaned_data.get("recorded_at") or timezone.now()
             
             
 
@@ -248,3 +256,35 @@ class ProfileEditForm(forms.ModelForm):
             "activity_level",
             "goal",
         ]
+        widgets = {
+            "gender": forms.Select(
+                choices=[
+                    ("", "Select Gender"),
+                    ("male", "Male"),
+                    ("female", "Female"),
+                    ("other", "Other"),
+                ],
+                attrs={"class": "form-control"}
+            ),
+            "height": forms.NumberInput(attrs={"placeholder": "Height in cm", "class": "form-control"}),
+            "weight": forms.NumberInput(attrs={"placeholder": "Weight in kg", "class": "form-control"}),
+            "activity_level": forms.Select(
+                choices=[
+                    ("", "Select Activity Level"),
+                    ("sedentary", "Sedentary (little or no exercise)"),
+                    ("light", "Lightly Active (light exercise 1-3 days/wk)"),
+                    ("moderate", "Moderately Active (moderate exercise 3-5 days/wk)"),
+                    ("very", "Very Active (hard exercise 6-7 days/wk)"),
+                ],
+                attrs={"class": "form-control"}
+            ),
+            "goal": forms.Select(
+                choices=[
+                    ("", "Select Goal"),
+                    ("lose", "Lose Weight (-500 kcal deficit)"),
+                    ("maintain", "Maintain Weight"),
+                    ("gain", "Gain Weight (+500 kcal surplus)"),
+                ],
+                attrs={"class": "form-control"}
+            ),
+        }

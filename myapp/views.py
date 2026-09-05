@@ -827,8 +827,10 @@ def add_category(request):
 
 @login_required
 def edit_profile(request):
-
-    profile = request.user.userprofile
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        return redirect("profilesetup")
 
     if request.method == "POST":
 
@@ -846,6 +848,7 @@ def edit_profile(request):
 
             user_form.save()
             profile_form.save()
+            messages.success(request, "Profile updated successfully!")
 
             return redirect("userdash")
 
@@ -877,8 +880,16 @@ def edit_profile(request):
 
 @login_required
 def profile(request):
-    profile = request.user.userprofile
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        return redirect("profilesetup")
+
+    baseline = calculate_nutrition_baseline(profile)
+    targets = calculate_daily_targets(profile)
 
     return render(request, "profile.html", {
         "profile": profile,
+        "baseline": baseline,
+        "targets": targets,
     })

@@ -24,29 +24,24 @@ def calculate_bmr(
     age,
     gender
 ):
-    if not weight or not height or not age:
+    if not weight or not height or not age or not gender:
         return None
 
-    if gender == "male":
+    try:
+        w = float(weight)
+        h = float(height)
+        a = float(age)
+    except (ValueError, TypeError):
+        return None
 
-        bmr = (
-            10 * weight
-            + 6.25 * height
-            - 5 * age
-            + 5
-        )
-
-    elif gender == "female":
-
-        bmr = (
-            10 * weight
-            + 6.25 * height
-            - 5 * age
-            - 161
-        )
-
+    g = str(gender).strip().lower()
+    if g in ("male", "m"):
+        bmr = 10 * w + 6.25 * h - 5 * a + 5
+    elif g in ("female", "f"):
+        bmr = 10 * w + 6.25 * h - 5 * a - 161
     else:
-        return None
+        # Default gender-neutral average
+        bmr = 10 * w + 6.25 * h - 5 * a - 78
 
     return round(bmr)
 
@@ -58,27 +53,21 @@ def calculate_tdee(
     if not bmr or not activity_level:
         return None
 
+    act = str(activity_level).strip().lower()
     activity_multipliers = {
-
         "sedentary": 1.2,
-
         "light": 1.375,
-
+        "lightly active": 1.375,
         "moderate": 1.55,
-
+        "moderately active": 1.55,
         "very": 1.725,
+        "very active": 1.725,
+        "active": 1.725,
+        "extra": 1.9,
     }
 
-    multiplier = activity_multipliers.get(
-        activity_level
-    )
-
-    if not multiplier:
-        return None
-
-    tdee = bmr * multiplier
-
-    return round(tdee)
+    multiplier = activity_multipliers.get(act, 1.2)
+    return round(float(bmr) * multiplier)
 
 
 def calculate_nutrition_baseline(profile):
@@ -90,6 +79,9 @@ def calculate_nutrition_baseline(profile):
         return None
 
     age = calculate_age(profile.date_of_birth)
+    if age is None:
+        age = 25  # Sensible default if DOB not provided
+
     bmr = calculate_bmr(
         weight=profile.weight,
         height=profile.height,
@@ -117,9 +109,8 @@ def calculate_daily_targets(profile):
       - Gain Weight: TDEE + 500 kcal (surplus for lean mass)
       - Maintain: TDEE
     Macronutrient splits:
-      - Protein: 25% of energy (4 kcal/g)
-      - Carbohydrates: 50% of energy (4 kcal/g)
-      - Fat: 25% of energy (9 kcal/g)
+      - Standard / Lose: 25% Protein, 50% Carbs, 25% Fat
+      - Gain: 30% Protein, 45% Carbs, 25% Fat
       - Fiber: 30g daily standard
     """
     if not profile:
@@ -139,22 +130,29 @@ def calculate_daily_targets(profile):
     if profile.daily_calorie_target and profile.daily_calorie_target > 500:
         calorie_target = float(profile.daily_calorie_target)
     else:
-        goal = (profile.goal or "maintain").lower()
+        goal = (profile.goal or "maintain").strip().lower()
         if "lose" in goal:
-            calorie_target = max(1200.0, tdee - 500.0)
+            calorie_target = max(1200.0, float(tdee) - 500.0)
         elif "gain" in goal:
-            calorie_target = tdee + 500.0
+            calorie_target = float(tdee) + 500.0
         else:
             calorie_target = float(tdee)
 
     calorie_target = round(calorie_target)
 
-    # Standard healthy macro distribution
-    target_protein = round((calorie_target * 0.25) / 4.0, 1)
-    target_carbs = round((calorie_target * 0.50) / 4.0, 1)
-    target_fat = round((calorie_target * 0.25) / 9.0, 1)
+    # Goal-tailored macro distribution
+    goal_str = (profile.goal or "maintain").strip().lower()
+    if "gain" in goal_str:
+        target_protein = round((calorie_target * 0.30) / 4.0, 1)
+        target_carbs = round((calorie_target * 0.45) / 4.0, 1)
+        target_fat = round((calorie_target * 0.25) / 9.0, 1)
+    else:
+        target_protein = round((calorie_target * 0.25) / 4.0, 1)
+        target_carbs = round((calorie_target * 0.50) / 4.0, 1)
+        target_fat = round((calorie_target * 0.25) / 9.0, 1)
+
     target_fiber = 30.0
-    target_water = round(profile.weight * 35) if profile.weight else 2500
+    target_water = round(float(profile.weight) * 35) if profile.weight else 2500
 
     return {
         "calorie_target": calorie_target,
