@@ -82,6 +82,7 @@ class Allergen(models.Model):
     
 class Food(models.Model):
     name = models.CharField(max_length=150)
+    name_nepali = models.CharField(max_length=150, blank=True, default="")
 
     category = models.ForeignKey(
         FoodCategory,
@@ -108,11 +109,17 @@ class Food(models.Model):
     carbohydrates = models.FloatField(default=0)
     fat = models.FloatField(default=0)
     fiber = models.FloatField(default=0)
+    sugar = models.FloatField(default=0)
+    sodium = models.FloatField(default=0)
 
     serving_size = models.FloatField(default=100)
     serving_unit = models.CharField(max_length=30, default="g")
+    is_nepali = models.BooleanField(default=True)
+    data_source = models.CharField(max_length=100, blank=True, default="NepaliNutriDB")
 
     def __str__(self):
+        if self.name_nepali:
+            return f"{self.name} ({self.name_nepali})"
         return self.name
     
 class FoodVariant(models.Model):
@@ -213,3 +220,28 @@ class WeightLog(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.weight} kg"
+
+
+class RecommendationHistory(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="recommendation_history"
+    )
+    food = models.ForeignKey(
+        Food,
+        on_delete=models.CASCADE,
+        related_name="recommendation_instances"
+    )
+    score = models.FloatField(default=0.0)
+    ml_score = models.FloatField(default=0.0)
+    budget_fit_score = models.FloatField(default=0.0)
+    recommended_at = models.DateTimeField(auto_now_add=True)
+    is_eaten = models.BooleanField(default=False)
+    user_rating = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-recommended_at"]
+
+    def __str__(self):
+        return f"{self.user.username} - {self.food.name} ({self.score:.2f})"

@@ -9,6 +9,7 @@ from .models import (
     MealLog,
     WaterLog,
     WeightLog,
+    RecommendationHistory,
 )
 
 
@@ -210,3 +211,19 @@ class WeightLogAdmin(admin.ModelAdmin):
     )
 
     list_filter = ('recorded_at',)
+
+
+@admin.register(RecommendationHistory)
+class RecommendationHistoryAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'food',
+        'score',
+        'ml_score',
+        'budget_fit_score',
+        'is_eaten',
+        'user_rating',
+        'recommended_at',
+    )
+    list_filter = ('is_eaten', 'recommended_at')
+    search_fields = ('user__username', 'food__name')
