@@ -128,13 +128,40 @@ def get_recommendations(user, limit=6, meal_type=None):
     # -------------------------------------------------------------
     # 1. HARD SAFETY FILTERS (Allergens & Preferences)
     # -------------------------------------------------------------
-    user_allergies = list(profile.allergies.values_list("name", flat=True))
+    ALLERGY_SYNONYMS = {
+        "dairy": ["Milk"],
+        "lactose": ["Milk"],
+        "milk": ["Milk"],
+        "peanut": ["Peanuts"],
+        "peanuts": ["Peanuts"],
+        "tree nut": ["Tree Nuts"],
+        "tree nuts": ["Tree Nuts"],
+        "nut": ["Tree Nuts", "Peanuts"],
+        "nuts": ["Tree Nuts", "Peanuts"],
+        "gluten": ["Gluten", "Wheat"],
+        "wheat": ["Wheat", "Gluten"],
+        "egg": ["Eggs"],
+        "eggs": ["Eggs"],
+        "soy": ["Soy"],
+        "fish": ["Fish", "Shellfish"],
+    }
+
+    raw_allergies = list(profile.allergies.values_list("name", flat=True))
     if profile.custom_allergies:
-        user_allergies.extend([a.strip() for a in profile.custom_allergies.split(",") if a.strip()])
+        raw_allergies.extend([a.strip() for a in profile.custom_allergies.split(",") if a.strip()])
+
+    # Expand allergen synonyms into a comprehensive set
+    active_allergens = set()
+    for a in raw_allergies:
+        a_clean = a.strip()
+        active_allergens.add(a_clean)
+        for syn_key, mapped_list in ALLERGY_SYNONYMS.items():
+            if syn_key in a_clean.lower():
+                active_allergens.update(mapped_list)
 
     # Exclude any food with overlapping allergens
-    if user_allergies:
-        queryset = queryset.exclude(allergens__name__in=user_allergies)
+    if active_allergens:
+        queryset = queryset.exclude(allergens__name__in=list(active_allergens))
 
     # Dietary preferences
     user_diet_tags = list(profile.dietary_tags.values_list("name", flat=True))
@@ -151,12 +178,17 @@ def get_recommendations(user, limit=6, meal_type=None):
         queryset = queryset.filter(dietary_tags__name__iexact="Vegetarian")
 
     if is_gf:
-        queryset = queryset.filter(dietary_tags__name__iexact="Gluten Free")
+        queryset = queryset.filter(dietary_tags__name__iexact="Gluten Free").exclude(allergens__name__in=["Gluten", "Wheat"])
 
     foods = list(queryset.distinct())
     if not foods:
-        # Graceful fallback if filters were overly restrictive
-        foods = list(Food.objects.all()[:10])
+        # Graceful fallback that STILL strictly respects allergen safety
+        fallback_qs = Food.objects.all()
+        if active_allergens:
+            fallback_qs = fallback_qs.exclude(allergens__name__in=list(active_allergens))
+        if is_veg or is_vegan:
+            fallback_qs = fallback_qs.filter(dietary_tags__name__iexact="Vegetarian")
+        foods = list(fallback_qs.distinct()[:10])
 
     daily_summary = calculate_daily_summary(user, profile)
     model = _get_ml_model()

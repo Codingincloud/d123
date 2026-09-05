@@ -182,4 +182,4 @@ class ChatbotToolCallingTestCase(TestCase):
         convo = [{"role": "user", "content": "How many calories do I have today?"}]
         reply = _offline_intelligent_fallback(convo, self.user)
         self.assertIn("Today's Nutrition Summary", reply)
-        self.assertIn("Consumed Calories", reply)
+        self.assertIn("Calories Consumed", reply)

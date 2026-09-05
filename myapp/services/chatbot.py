@@ -16,7 +16,11 @@ import os
 from datetime import date
 
 from myapp.models import UserProfile
-from myapp.services.calculations import calculate_daily_summary, calculate_nutrition_baseline
+from myapp.services.calculations import (
+    calculate_daily_summary,
+    calculate_daily_targets,
+    calculate_nutrition_baseline,
+)
 
 
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
@@ -150,62 +154,154 @@ def _offline_intelligent_fallback(conversation, user):
     question and executes real database tools to provide ground-truth answers.
     Ensures zero crashes during offline college demonstrations.
     """
+def _offline_intelligent_fallback(conversation, user):
+    """
+    Intelligent generative fallback engine:
+    When no external Groq API key is present, this engine dynamically
+    parses the user's intent, queries live Django database models,
+    and constructs rich, contextual nutrition answers for any persona.
+    """
+    from myapp.models import Food, UserProfile
+    from myapp.ml.recommender import get_recommendations
+
     last_msg = ""
     for msg in reversed(conversation):
         if msg.get("role") == "user":
-            last_msg = msg.get("content", "").lower()
+            last_msg = msg.get("content", "").strip()
             break
 
-    if any(k in last_msg for k in ["calorie", "today", "consumed", "target", "budget", "left", "macro"]):
+    lower_msg = last_msg.lower()
+    profile = getattr(user, "userprofile", None)
+
+    # 1. LIVE CALORIE & DAILY BUDGET INQUIRIES
+    if any(k in lower_msg for k in ["calorie", "today", "consumed", "target", "budget", "left", "macro"]):
         summary = calculate_daily_summary(user)
         t = summary["targets"]
         return (
-            f"📊 **Today's Nutrition Summary:**\n\n"
-            f"- **Consumed Calories:** {summary['consumed_calories']} / {t['calorie_target']} kcal "
-            f"({summary['remaining_calories']} kcal remaining)\n"
-            f"- **Protein:** {summary['consumed_protein']}g / {t['target_protein']}g\n"
-            f"- **Carbohydrates:** {summary['consumed_carbohydrates']}g / {t['target_carbohydrates']}g\n"
-            f"- **Fat:** {summary['consumed_fat']}g / {t['target_fat']}g\n"
-            f"- **Water:** {summary['consumed_water']} ml\n\n"
-            f"{'⚠️ You have exceeded your daily calorie target.' if summary['over_budget'] else '✅ You are well within your daily calorie target!'}"
+            f"📊 **Today's Nutrition Summary for {user.username}:**\n\n"
+            f"- **Calories Consumed:** {summary['consumed_calories']:.0f} / {t['calorie_target']} kcal "
+            f"({summary['remaining_calories']:.0f} kcal remaining)\n"
+            f"- **Protein:** {summary['consumed_protein']:.1f}g / {t['target_protein']:.1f}g ({summary['pct_protein']}%)\n"
+            f"- **Carbohydrates:** {summary['consumed_carbohydrates']:.1f}g / {t['target_carbohydrates']:.1f}g ({summary['pct_carbohydrates']}%)\n"
+            f"- **Healthy Fats:** {summary['consumed_fat']:.1f}g / {t['target_fat']:.1f}g ({summary['pct_fat']}%)\n"
+            f"- **Water Intake:** {summary['consumed_water']} ml / {t['target_water']} ml\n\n"
+            f"{'⚠️ **Status:** You have exceeded your daily calorie target for today. Consider light Nepali vegetable soups like Gundruk or boiled greens.' if summary['over_budget'] else '✅ **Status:** You are on track with your daily budget!'}"
         )
 
-    if any(k in last_msg for k in ["recommend", "eat", "lunch", "dinner", "snack", "food", "suggest", "nepali"]):
-        from myapp.ml.recommender import get_recommendations
-        recs = get_recommendations(user, limit=3)
+    # 2. MEAL RECOMMENDATIONS (XGBoost Powered)
+    if any(k in lower_msg for k in ["recommend", "what should i eat", "eat", "lunch", "dinner", "breakfast", "snack", "suggest meal"]):
+        recs = get_recommendations(user, limit=4)
         if not recs:
-            return "No specific meal recommendations found. Try adjusting your dietary preferences."
+            return "No specific meal recommendations found. Try adjusting your dietary preferences in your profile."
 
-        res = "🥗 **Top Recommended Nepali Dishes for You (via XGBoost Recommender):**\n\n"
+        goal_text = profile.get_goal_display() if profile else "Healthy Living"
+        res = f"🥗 **Personalized Nepali Meal Recommendations ({goal_text} Goal):**\n\n"
         for i, r in enumerate(recs, 1):
             f = r["food"]
             nep = f" ({f.name_nepali})" if f.name_nepali else ""
             res += (
-                f"{i}. **{f.name}{nep}** — {r['match_pct']}% Match\n"
-                f"   • Calories: {f.calories} kcal | Protein: {f.protein}g | Carbs: {f.carbohydrates}g | Fat: {f.fat}g\n"
-                f"   • Badges: {', '.join(r['reasons'])}\n\n"
+                f"{i}. **{f.name}{nep}** — `{r['match_pct']}% Match`\n"
+                f"   • **Nutrients:** {f.calories:.0f} kcal | {f.protein:.1f}g Protein | {f.carbohydrates:.1f}g Carbs | {f.fat:.1f}g Fat\n"
+                f"   • **Portion:** {f.serving_size:.0f} {f.serving_unit}\n"
+                f"   • **Highlights:** {', '.join(r['reasons'])}\n\n"
             )
+        res += "💡 *Tip: You can log any of these meals directly from your Dashboard recommendations section!*"
         return res
 
-    if any(k in last_msg for k in ["profile", "bmr", "tdee", "height", "weight", "goal"]):
-        profile = getattr(user, "userprofile", None)
+    # 3. USER PROFILE, BMR, TDEE
+    if any(k in lower_msg for k in ["my profile", "bmr", "tdee", "expenditure", "my goal", "my height", "my weight", "my stats"]):
         if not profile:
-            return "You haven't set up your profile yet. Please complete your profile setup."
+            return "You haven't set up your profile yet. Please visit [Profile Setup](/profile/setup/) to enter your physical metrics."
         baseline = calculate_nutrition_baseline(profile)
+        targets = calculate_daily_targets(profile)
         return (
-            f"👤 **Your Health Profile:**\n\n"
+            f"👤 **Your Health Profile & Metabolism ({user.username}):**\n\n"
             f"- **Current Goal:** {profile.get_goal_display() or 'Not set'}\n"
-            f"- **Weight:** {profile.weight} kg | **Height:** {profile.height} cm\n"
-            f"- **Basal Metabolic Rate (BMR):** {baseline['bmr']} kcal/day\n"
-            f"- **Total Daily Energy Expenditure (TDEE):** {baseline['tdee']} kcal/day\n"
-            f"- **Daily Calorie Target:** {profile.daily_calorie_target or baseline['tdee']} kcal"
+            f"- **Physical Stats:** {profile.weight} kg | {profile.height} cm | Age: {_age_in_years(profile.date_of_birth) or 'N/A'}\n"
+            f"- **Activity Level:** {profile.get_activity_level_display() or 'Moderate'}\n"
+            f"- **Basal Metabolic Rate (BMR):** {baseline['bmr']} kcal/day *(calories burned at complete rest)*\n"
+            f"- **Total Daily Energy Expenditure (TDEE):** {baseline['tdee']} kcal/day *(with activity)*\n"
+            f"- **Daily Calorie Target:** **{targets['calorie_target']} kcal/day**\n"
+            f"- **Target Macros:** {targets['target_protein']}g Protein | {targets['target_carbohydrates']}g Carbs | {targets['target_fat']}g Fat"
         )
 
+    # 4. SPECIFIC FOOD LOOKUP IN NEPALI NUTRIDB
+    food_keywords = [
+        "momo", "dal bhat", "dhido", "gundruk", "sel roti", "chiura", "kwati",
+        "choila", "sekuwa", "bhatmas", "chana", "anda", "egg", "chicken",
+        "paneer", "milk", "dahi", "curd", "chowmein", "puri", "roti",
+        "chatamari", "bara", "sukuti", "samay baji", "yomari", "tea", "chiya"
+    ]
+    matched_food = None
+    for kw in food_keywords:
+        if kw in lower_msg:
+            matched_food = Food.objects.filter(name__icontains=kw).first()
+            if matched_food:
+                break
+
+    if matched_food:
+        f = matched_food
+        nep = f" ({f.name_nepali})" if f.name_nepali else ""
+        return (
+            f"🍽️ **Nutritional Profile: {f.name}{nep}**\n\n"
+            f"- **Serving Size:** {f.serving_size:.0f} {f.serving_unit}\n"
+            f"- **Calories:** {f.calories:.0f} kcal\n"
+            f"- **Protein:** {f.protein:.1f}g\n"
+            f"- **Carbohydrates:** {f.carbohydrates:.1f}g\n"
+            f"- **Fat:** {f.fat:.1f}g\n"
+            f"- **Dietary Fiber:** {f.fiber:.1f}g\n"
+            f"- **Category:** {f.category.name if f.category else 'Nepali Cuisine'}\n\n"
+            f"💡 **Nutritionist Note:** "
+            f"{'High in dietary fiber and complex carbs — excellent for digestive health.' if f.fiber >= 5 else 'A classic Nepali food. Monitor serving size if you are on a calorie deficit.'}"
+        )
+
+    # 5. HIGH-PROTEIN & MUSCLE GAIN QUERIES
+    if any(k in lower_msg for k in ["protein", "muscle", "gym", "bulk", "bhatmas", "chana"]):
+        return (
+            "💪 **High-Protein Nepali Foods for Muscle Building & Satiety:**\n\n"
+            "1. **Bhatmas (Roasted Soybeans):** ~36g protein per 100g — the ultimate affordable plant protein in Nepal.\n"
+            "2. **Kwati (Sprouted 9-Bean Soup):** ~12g protein per bowl + 9g fiber for great digestion.\n"
+            "3. **Chicken / Buff Momo (Steamed):** ~18g-24g protein per plate (steamed is much leaner than fried).\n"
+            "4. **Chicken / Buff Choila:** ~25g protein per 100g (grilled/roasted lean meat).\n"
+            "5. **Chana / Rajma Dal:** ~10-14g protein per cup.\n"
+            "6. **Eggs (Boiled):** ~12g protein per 2 large eggs.\n\n"
+            "🎯 **Recommendation:** Aim for 1.6g to 2.0g of protein per kg of body weight if you are strength training."
+        )
+
+    # 6. WEIGHT LOSS & FAT LOSS QUERIES
+    if any(k in lower_msg for k in ["lose weight", "fat loss", "belly fat", "diet plan", "slimming"]):
+        return (
+            "📉 **Evidence-Based Nepali Diet Strategy for Weight Loss:**\n\n"
+            "1. **Calorie Deficit:** Aim for a safe 500 kcal daily deficit (e.g. TDEE 2200 kcal → Target 1700 kcal) for ~0.5 kg fat loss/week.\n"
+            "2. **The Dal Bhat Plate Method:**\n"
+            "   - Fill 1/2 of your plate with green vegetables / Tarkari / Gundruk.\n"
+            "   - Fill 1/4 with protein (thick Dal, Kwati, boiled egg, chicken curry).\n"
+            "   - Fill 1/4 with plain rice (Bhat) or swap with Dhido.\n"
+            "3. **Watch Added Fats:** Ghee and mustard oil are calorie-dense (1 tbsp oil = ~120 kcal). Measure oil while cooking.\n"
+            "4. **Snack Smart:** Replace fried samosas or donuts with roasted Chiura + Chana or seasonal fruit.\n"
+            "5. **Hydration:** Drink 2.5–3 liters of water daily, especially before meals."
+        )
+
+    # 7. DIABETES, LOW-CARB & GLUTEN-FREE QUERIES
+    if any(k in lower_msg for k in ["sugar", "diabetes", "diabetic", "low carb", "gluten", "celiac"]):
+        return (
+            "🩺 **Healthy Low-Glycemic & Gluten-Free Nepali Options:**\n\n"
+            "- **Dhido (Millet / Kodo or Buckwheat / Fapar):** Naturally gluten-free, low glycemic index, and keeps blood sugar stable.\n"
+            "- **Kwati:** Sprouted mixed lentils provide sustained complex carbohydrates and slow insulin spikes.\n"
+            "- **Gundruk Soup:** Very low in calories (<30 kcal) and rich in beneficial probiotics and minerals.\n"
+            "- **Chiura (Beaten Rice):** Gluten-free; pair with protein (curd or chana) to prevent rapid glucose absorption.\n"
+            "- **Foods to Limit:** White flour items (Puri, Naan), sugary desserts (Sel Roti, Yomari, Lakhamari)."
+        )
+
+    # 8. GENERAL GREETING / DEFAULT HELPFUL GUIDANCE
     return (
-        "Hello! I am NutriAI, your personalized nutrition assistant. "
-        "You can ask me about your daily calories ('How many calories left?'), "
-        "request meal recommendations ('What should I eat for dinner?'), "
-        "or check your BMR/TDEE metrics ('What is my energy expenditure?')."
+        f"Namaste {user.username}! 🙏 I am **NutriAI**, your personalized Nepali nutrition assistant.\n\n"
+        "Here are a few things you can ask me:\n"
+        "- *'What should I eat for lunch or dinner?'* (Runs our XGBoost recommendation model)\n"
+        "- *'How many calories do I have left today?'* (Checks your live calorie & macro budget)\n"
+        "- *'What is my BMR and TDEE?'* (Calculates your personal metabolic rates)\n"
+        "- *'Tell me the nutrition of Momo or Dal Bhat'* (Looks up exact values in NepaliNutriDB)\n"
+        "- *'What are good Nepali protein sources?'* (Provides evidence-based dietary advice)"
     )
 
 
