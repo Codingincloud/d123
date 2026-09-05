@@ -36,6 +36,13 @@
             {% endfor %}
         {% endif %}
 
+        <div class="chatbot-suggestions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <button type="button" class="chip-btn" onclick="document.getElementById('chatbot-message').value='What should I eat for dinner?'; document.querySelector('.chatbot-form').submit();" style="background: rgba(108, 99, 255, 0.15); border: 1px solid rgba(108, 99, 255, 0.4); color: #c4c0ff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer;">🥗 What should I eat for dinner?</button>
+            <button type="button" class="chip-btn" onclick="document.getElementById('chatbot-message').value='How many calories do I have left today?'; document.querySelector('.chatbot-form').submit();" style="background: rgba(108, 99, 255, 0.15); border: 1px solid rgba(108, 99, 255, 0.4); color: #c4c0ff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer;">🔥 Calories left today?</button>
+            <button type="button" class="chip-btn" onclick="document.getElementById('chatbot-message').value='What is my BMR and daily energy expenditure?'; document.querySelector('.chatbot-form').submit();" style="background: rgba(108, 99, 255, 0.15); border: 1px solid rgba(108, 99, 255, 0.4); color: #c4c0ff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer;">⚡ My BMR & TDEE?</button>
+            <button type="button" class="chip-btn" onclick="document.getElementById('chatbot-message').value='Suggest high-protein Nepali food options.'; document.querySelector('.chatbot-form').submit();" style="background: rgba(108, 99, 255, 0.15); border: 1px solid rgba(108, 99, 255, 0.4); color: #c4c0ff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer;">💪 High-protein Nepali food</button>
+        </div>
+
         <form method="post" class="chatbot-form">
             {% csrf_token %}
             <label class="sr-only" for="chatbot-message">Your message</label>
